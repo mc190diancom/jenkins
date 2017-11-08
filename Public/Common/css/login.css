@@ -1,0 +1,25 @@
+html,body{
+	margin: 0;
+	padding: 0;
+	}
+input{
+	outline: none;
+}
+.bagrand{position: absolute;z-index:-1;background:url(../img/login.png) no-repeat; width: 100%; height: 100%;background-size: 100% 100%;filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/login.png', sizingMethod='scale');}
+.logo{width: 41%; height: 150px; position: absolute;top: 8%; right: 5%;}
+.logo img{ width: 90%; /*height: 150px;*/}
+.form{box-shadow: 0 0 10px #888888; width: 28%; height: 400px; background: #EBEDED; text-align: center;  position: absolute;top: 50%;margin-top: -140px; right: 9%; border-radius: 8px;}
+.form p{ font-size: 26px;  font-family: "黑体"; margin: 0; padding: 0; margin-top: 40px;}
+.name{width: 77%; height: 60px; background: white url(../img/icon_name.png) no-repeat 3% 15px; margin-left: 12%;margin-top: 34px;line-height: 63px; border: 1px solid #D8DFE5; border-radius: 5px;}
+.name input{ height: 36px; width: 70%; font-size: 20px; border: 0; border-left: 1px solid #D8DFE5; padding-left: 24px; color: #999999;}
+.pwd{width: 77%; height: 60px;background: white url(../img/icon_pwd.png) no-repeat 3% 15px;
+  margin-left: 12%; margin-top: 30px;line-height: 63px; border: 1px solid #D8DFE5; border-radius: 5px;}
+.pwd input{ height: 36px; width: 70%; font-size: 20px; border: 0; border-left: 1px solid #D8DFE5; padding-left: 24px; color: #999999;}
+.check{width: 77%; height: 18px; margin-left: 12%; margin-top: 16px;}
+.check input{ width: 18px; height: 18px; float: left; margin-top: 4px;cursor: pointer;}
+.check .re{float: left; margin-left: 10px; font-size: 18px; color: #999999;cursor: pointer;}
+.check .fo{float: right; font-size: 18px; color: #999999;cursor: pointer;}
+.submit{width: 77%; height: 60px; line-height: 60px; font-size: 30px; color: white; background-color: #41C3D6; margin-left: 12%; border-radius: 5px; margin-top: 26px; font-family: "黑体";}
+.submit:hover{
+	background-color: darkcyan;
+}
