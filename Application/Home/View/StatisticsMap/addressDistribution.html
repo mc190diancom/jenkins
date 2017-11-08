@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=e8PNl3bInqrm8d3iOrsk6NKR"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<!--  -->
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+
+	</head>
+	<body>
+
+		<include file="Public:head" />
+
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="{:U('Home/StatisticsMap/addressDistribution')}"><dt id="user" class="dldt border" >执法队员检查地点分布热点图</dt></a>
+					<a href="{:U('Home/StatisticsMap/taxiDistribution')}"><dt id="123" class="dldt">执法车分布图</dt></a>
+					<!-- <a href="{:U('Home/StatisticsMap/complaintCaseDistribution')}"><dt class="dldt">投诉案件分布情况热点图</dt></a>
+					<a href="{:U('Home/StatisticsMap/irregularitiesDistribution')}"><dt class="dldt">违规行为地理分布热点图</dt></a> -->
+					<a href="{:U('Home/StatisticsMap/timeDistribution')}"><dt class="dldt">执法时间段热点图</dt></a>
+				</dl>
+			</div>
+			<div class="center_right">
+				
+				<div class="clear"></div>
+				<form action="##" method="post">	
+				<div class="title_1 c-title">检索项</div>
+
+				<div class="search_from msg-search" style="margin-top: 10px;height: 100%; width: 100%;">
+					<dl style="position: relative">
+						<dd>
+							<div class="left">起始时间</div>
+							<div class="right">
+								<input placeholder="请输入日期" name="startTime" class="easyui-datetimebox" style="height: 25px;width: 100%;position: relative;border: 1px solid #41C3D6;border-radius: 0;" id="demo" value="{$startDate}">
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">结束时间</div>
+							<div class="right">
+								<input placeholder="请输入日期" name="endTime" class="easyui-datetimebox" style="height: 25px;width: 100%;position: relative;border: 1px solid #41C3D6;border-radius: 0;" value="{$endDate}">
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">驾驶员姓名</div>
+							<div class="right"><input type="text" style="height: 25px;" class="input" name="driverName" id="name" value="{$c.driverName}" /></div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">大队</div>
+							<div class="right">
+								<input type="text" readonly style="height: 25px;" class="input xxl" name="dd" id="dd" value="--请选择--" />
+								<ul class="dadui disshow" id="dadui"  style="width:100%;left: 40%;">
+									<li>全部</li>
+									<volist name="compName" id="v">
+										<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+									</volist>
+								</ul>
+							</div>
+							<div class="clear"></div>
+						</dd>
+						
+				
+					</dl>
+					<div class="clear"></div>
+				</div>
+				<div class="submit">			
+					<input type="button" name="" id="search_btn" value="查询" />                           
+				</div>
+				</form>
+
+				<!-- =============结果====================== -->
+				<div style="margin-top:80px;margin-bottom:110px;">
+						<div class="center_right_top table-responsive">
+							<span>查询结果</span>
+							<!-- <div class="delAll">删除选择项</div> -->
+							<div class="clear"></div>
+						</div>
+						<div class="center_right_botton">
+							<input type="hidden" id="nums" name="" value="">
+							<!--startprint6-->
+							<div id="allmap" class="map" ></div>
+							<!--endprint6-->
+						
+						</div>
+							
+						<!-- <div class="return">
+							<input type="submit" onclick="preview(6)" name="" id="" value="打印" /> 
+						</div> -->
+						<!-- <div class="return" style="margin-right: 15px">
+							<a href="javascript:ExportCsv();"><input type="submit" name="" id="" value="导出" /> </a>
+						</div> -->
+					</div>					
+				</div>
+				<!-- =============结果====================== -->
+				<div style="clear:both;"></div>
+		</div>
+		
+		
+	</body>
+</html>
+<script>
+	
+
+	$("#dd").click(function(){
+		if($("#dadui").hasClass('disshow'))
+		{
+			$("#dadui").removeClass('disshow');
+		}
+		else
+
+		{
+			$("#dadui").addClass('disshow');
+		}
+
+		$("#dadui li").click(function(){
+			var ht = $(this).html() ;
+			$("#dd").val(ht);
+			$('#zhongdui').css('height',0);
+			$("#dadui").addClass('disshow');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : ht,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '<li>全部</li>';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSZD']+'">'+data[i]['SSZD']+'</li>'
+					};
+					$('#zhongdui').css('height',200);
+					$('#zhongdui').css('display','none');
+					$('#zhongdui').html(str);
+
+					//$('#chezu').html(str);
+					$('#zd').val('--请选择--');
+					$('#cz').val('--请选择--');
+					
+					 //console.log(data);
+				}
+			});
+		})
+	})
+	$("#zd").click(function(){
+		$('#zhongdui').css('height','200px');
+		$('#zhongdui').css('display','block');
+		
+		$("#zhongdui li").click(function(){
+			var sszd = $(this).html() ;
+			$('#zhongdui').css('height',0);
+			$('#zhongdui').css('display','none');
+			$("#zd").val(sszd);
+			var zfdwmc = $("#dd").val();
+			//$("#zhongdui").addClass('disshow');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : zfdwmc,
+					sszd : sszd,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '<li>全部</li>';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSCZ']+'">'+data[i]['SSCZ']+'</li>'
+					};
+					$('#chezu').css('height',200);
+					$('#chezu').css('border','1px solid #41C3D6');
+					$('#chezu').css('display','none');
+					$('#chezu').html(str);
+					$('#cz').val('--请选择--');
+
+					
+					 //console.log(data);
+				}
+			});
+		})
+	});
+	$("#cz").click(function(){
+		$('#chezu').css('height','200px');
+		$('#chezu').css('display','block');
+		
+		$("#chezu li").click(function(){
+			$('#chezu').css('display','none');
+			$('#chezu').css('height',0);
+			var cz = $(this).html() ;
+			$("#cz").val(cz);
+			$("#chezu").removeClass('disshow');
+		})
+	});
+	$("#hy").click(function(){
+		if($("#hangye").hasClass('disshow'))
+		{
+			$("#hangye").removeClass('disshow');
+		}
+		else
+
+		{
+			$("#hangye").addClass('disshow');
+		}
+		$("#hangye li").click(function(){
+			var ht = $(this).html() ;
+			$("#hy").val(ht);
+			$("#hangye").addClass('disshow');
+		})
+	})
+</script>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('disshow'))
+		{
+			$("#info").removeClass('disshow');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('disshow');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('disshow');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('disshow');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+	
+</script>
+
+<script type="text/javascript">
+
+	var bm = new BMap.Map("allmap");
+	bm.centerAndZoom(new BMap.Point(116.404,39.915), 11);
+	bm.enableScrollWheelZoom(true);
+	//自定义图标
+	function ComplexCustomOverlay(point, text, mouseoverText,account){
+		this._point = point;
+		this._text = text;
+		this._overText = mouseoverText;
+		this._account = account;
+	}
+	ComplexCustomOverlay.prototype = new BMap.Overlay();
+	ComplexCustomOverlay.prototype.initialize = function(map){
+		this._map = map;
+		var div = this._div = document.createElement("div");
+		div.style.position = "absolute";
+		div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+		div.style.backgroundColor = "white";
+		//div.style.backgroundColor = "rgba(255,0,0,0.5)";
+		//div.style.background = "url(__IMG__/icon-bg.png) 0px 5px no-repeat";
+		div.style.color = "#000";
+		div.style.height = "50px"
+		div.style.width = "80px";
+		//div.style.border.radius = "15px"
+		div.style.borderRadius = "10px";
+		div.style.padding = "2px";
+		div.style.lineHeight = "10px";
+		div.style.whiteSpace = "";
+		div.style.MozUserSelect = "none";
+		div.style.fontSize = "12px"
+		var p1 = this._span = document.createElement("p");  //添加标签
+		var p = this._span = document.createElement("p");
+		div.appendChild(p1);  //写入标签
+		div.appendChild(p);
+		p1.style.textAlign = "center";  //标签样式
+		p.style.textAlign = "center";
+		p1.appendChild(document.createTextNode(this._text));  //标签赋值
+		p.appendChild(document.createTextNode(this._account));
+		var that = this;
+
+		var arrow = this._arrow = document.createElement("div");
+
+		arrow.style.position = "absolute";
+		arrow.style.width = "30px";
+		arrow.style.height = "30px";
+		arrow.style.top = "0px";
+		arrow.style.left = "0px";
+		arrow.style.overflow = "hidden";
+		div.appendChild(arrow);
+
+		/*div.onmouseover = function(){
+			this.style.background = "url('') no-repeat";
+			this.style.backgroundColor = "#6BADCA";
+			this.style.borderColor = "#0000ff";
+			this.getElementsByTagName("p")[0].innerHTML = that._overText;
+			this.style.height = "80px"
+			this.style.width = "120px";
+			this.style.lineHeight = "18px";
+			this.style.borderRadius = "3px";
+			p1.style.textAlign = "left";  //标签样式
+			p.style.textAlign = "left";
+			arrow.style.backgroundPosition = "0px -80px";
+		}
+
+		div.onmouseout = function(){
+			//this.style.backgroundColor = "white";
+			//this.style.backgroundColor = "rgba(255,0,0,0.5)";
+			this.style.background = "url(__IMG__/icon-bg.png)  0px 5px no-repeat";
+			this.style.borderColor = "#BC3B3A";
+			this.style.height = "30px"
+			this.style.width = "80px";
+			this.style.lineHeight = "10px";
+			this.style.borderRadius = "10px";
+			p1.style.textAlign = "center";  //标签样式
+			p.style.textAlign = "center";
+			this.getElementsByTagName("p")[0].innerHTML = that._text;
+			arrow.style.backgroundPosition = "0px 0px";
+		}*/
+		bm.getPanes().labelPane.appendChild(div);
+		return div;
+	}
+	ComplexCustomOverlay.prototype.draw = function(){
+		var map = this._map;
+		var pixel = map.pointToOverlayPixel(this._point);
+		this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
+		this._div.style.top  = pixel.y - 30 + "px";
+	}
+	//自定义图标完
+
+	
+	$(function (){
+		/****/
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height-50);
+		
+	});
+
+	$('#search_btn').bind('click',function(){
+			bm.clearOverlays();
+			var dd = $("#dd").val();
+			var name = $("#name").val();
+			var startTime = $("input[name='startTime']").val();
+			var endTime = $("input[name='endTime']").val();
+
+			var driverNameReg = /^[\u4E00-\u9FA5]{1,6}$/;
+
+			if(startTime == ''|| endTime == ''){
+				layer.alert('开始时间和结束时间不能为空', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= endTime){
+				layer.alert('开始时间不能大于结束时间', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= (new Date()).Format("yyyy-MM-dd hh:mm:ss") || endTime > (new Date()).Format("yyyy-MM-dd hh:mm:ss")){
+					layer.alert('请填写有效时间', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+
+			if(name != ''){
+				if (!driverNameReg.test(name)) {
+					layer.alert('请填写正确的姓名', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+
+
+			if(dd=='--请选择--'){
+				dd = '';
+			}
+		
+			var index = layer.load(0, {
+				shade: [0.5,'#fff'] //0.1透明度的白色背景
+			});
+			$.post("{:U('StatisticsMap/ajaxAddressDistribution')}",{dd:dd,name:name,startTime:startTime,endTime:endTime},function(data){
+				layer.closeAll("loading");
+				console.log(data);
+
+				if(data == '')
+				{
+					layer.alert('查询人员分布为空', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+				}
+				else
+				{
+					var points = [];
+					var personName = new Array();
+					var account = new Array();
+					var ssdd = new Array();
+					/*var vnames = new Array();
+					var cc = new Array();*/
+					$.each(data,function(k,v){
+						/*vnames[k] = v.personName;
+						cc[k] = v.account;
+						var p1 =  new BMap.Point(v.lon, v.lat);
+						points.push(p1);*/
+						var p1 =  new BMap.Point(v.lon,v.lat);
+						points.push(p1);
+						personName[k] = v.personName;
+						account[k] = v.account;
+						ssdd[k] = v.ssdd;
+						/*if(k == 0){
+							 p_start = new BMap.Point(v.lon,v.lat);
+							 bm.centerAndZoom(new BMap.Point(v.lon,v.lat), 13);
+						}
+						if(k === json.length-1){
+							p_end = new BMap.Point(v.lon,v.lat);
+						}*/
+						/*var marker = new ComplexCustomOverlay(points,personName[k],ssdd[k],account[k]);
+						bm.addOverlay(marker);*/
+
+					});
+
+					//change(points,vnames,cc)
+					for (var i = 0; i < points.length; i++) {
+
+						var text1 = personName[i];
+						var text2 = ssdd[i];
+						var tt = account[i];
+						addMarker(points[i],text1,text2,tt);
+					}
+
+					function addMarker(point,text1,text2,account){
+						/*var marker = new ComplexCustomOverlay(point,text1,text2,account);
+						bm.centerAndZoom(point, 10);*/
+						var marker = new BMap.Marker(point);
+							bm.addOverlay(marker);
+							var label = new BMap.Label(text1+"<br/>"+account,{offset:new BMap.Size(20,-10)});
+							label.setStyle({                                   //给label设置样式，任意的CSS都是可以的
+							    color:"#333",                   //颜色
+							    fontSize:"12px",               //字号
+							    border:"0",                    //边
+							    height:"40px",                //高度
+							    width:"100px",                 //宽
+							    textAlign:"center",            //文字水平居中显示
+							    lineHeight:"18px",            //行高，文字垂直居中显示
+							    backgroundColor:"#fff",    //背景图片，这是房产标注的关键！
+							    background:"url(__IMG__/msg2.png) no-repeat",
+							    padding:"5px 0 20px 5px",
+							    cursor:"pointer",
+							    display:"none"  //给label设置样式，任意的CSS都是可以的
+							});
+							marker.setLabel(label); //添加百度label
+							/*$(".BMap_Marker").each(function(e){
+				              
+				                   $(this).find("img").attr("src","__IMG__/qidian_hangye.png");
+				                  
+
+				          	});*/
+							bm.setCenter(point);
+							marker.addEventListener("click", function(){  
+								$('label.BMapLabel').css('display','none');
+						    	label.setStyle({    //给label设置样式，任意的CSS都是可以的
+						        	display:"block"
+							    });
+							         
+							});
+
+							$('label.BMapLabel').css('top','-50px');
+							$('label.BMapLabel').css('left','-42px');
+					}
+				}
+
+			},'json')
+
+		});
+
+</script>
+
+
+
+
+

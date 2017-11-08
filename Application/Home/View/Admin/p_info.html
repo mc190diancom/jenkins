@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.center_right .search_from .input {
+			    width: 65%;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+		<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<dt id="user" class="dldt border">个人信息</dt>									
+				</dl>
+			</div>
+			<div class="center_right" style="width: 385px;">
+				<div class="title_1" style="top: 180px; font-size: 18px; width: 80px;">
+					个人信息
+				</div>
+				<form action="" method="post">
+					<!-- {$R.NAME} -->
+					
+			
+				<div class="search_from" style="margin-top: 10px; height: 380px; width: 385px;">
+					<dl>						
+						<dd style="width: 100%">
+							<div class="left">姓名</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.NAME}"  readonly/>
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd style="width: 100%">
+							<div class="left">执法证号</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.ZFZH}" readonly/>
+							</div>
+							<div class="clear"></div>
+						
+						</dd>
+						<dd style="width: 100%">
+							<div class="left">大队</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.ZFDWMC}" readonly/>
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd style="width: 100%">
+							<div class="left">中队</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.SSCZ}" readonly/>
+							</div>
+							<div class="clear"></div>
+						
+						</dd>
+						<dd style="width: 100%">
+							<div class="left">车组</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.SSZD}" readonly/>
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd style="width: 100%">
+							<div class="left">IMEI卡号</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="" value="{$R.IMEI_CODE}" readonly/>
+							<div class="clear"></div>
+						</dd>
+					</dl>				
+				</div>
+				<div class="submit">			
+					<a href="javascript:history.go(-1)"><input type="button" name="" id="" value="返回" />    </a>
+				</div>
+				
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+<script type="text/javascript">
+	$(function(){
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height-150);
+	})
+</script>

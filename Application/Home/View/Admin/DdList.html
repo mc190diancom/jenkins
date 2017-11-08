@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+		<title>出租汽车稽查系统</title>
+		<include file="Public:common" />
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+	</head>
+	<body>
+		<div class="center">
+			<div class="center_right" style="margin: 0;width: 86%;">
+
+				<!-- =============结果====================== -->
+				<div style="margin-top:30px;margin-bottom:110px;">
+						<div class="center_right_top table-responsive">
+							<span>查询结果</span>
+							<div class="Add">添加</div>
+							<!-- <div class="delAll" id="DelAll">删除选择项</div>-->
+							<div class="clear"></div>
+						</div>
+						<div class="center_right_botton">
+							<input type="hidden" id="zfzh" name="" value="{$zfzh}">
+							<!--startprint6-->
+							<table id="table" data-height="268" class="table table-striped table-bordered table-hover">
+							    <thead>
+							    <tr>
+							        <th data-field="state" data-checkbox="true"></th>
+							        <th data-field="ZFZH" data-align="center" data-sortable="true"><div style="width:60px">执法账号</div></th>
+							        <th data-field="GROUPNAME" data-align="center" data-sortable="true"><div style="width:150px">执法队伍</div></th>
+							        <th data-field="action" data-formatter="actionFormatter" data-align="center" data-events="actionEvents"><div style="width:100px">操作</div></th>
+							    </tr>
+							    </thead>
+							</table>
+							<!--endprint6-->
+						
+						</div>
+							
+						<!-- <div class="return">
+							<input type="submit" onclick="preview(6)" name="" id="" value="打印" /> 
+						</div> -->
+						<!--<div class="return" style="margin-right: 15px">
+							<a href="javascript:ExportCsv();"><input type="submit" name="" id="" value="导出" /> </a>
+						</div>-->
+					</div>					
+				</div>
+				<!-- =============结果====================== -->
+				<div style="clear:both;"></div>
+		</div>
+		
+		
+	</body>
+</html>
+<script>
+
+	
+	
+</script>
+
+
+
+<script type="text/javascript">
+    function getParams(params){
+        var zfzh = $("#zfzh").val();
+        var temp  = {
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            maxrows: params.limit,
+            pageindex:params.pageNumber,
+            zfzh:zfzh,
+        };
+        return temp;
+	}
+
+		//重新装载数据
+	function loadData(){
+		$('#table').bootstrapTable('refresh');
+
+	}
+	$(function () {
+		/****/
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height+150);
+        $('.center_right').css('margin-left',"7%");
+		$('#table').bootstrapTable({
+	        url: '__APP__/Home/Admin/ajaxDdList',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: getParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行
+            height: false,                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            formatLoadingMessage: function () {
+			    return "请稍等，正在加载中...";
+			  },
+			formatNoMatches: function () {  //没有匹配的结果
+			    return '无符合条件的记录';
+			},
+            onLoadError: function (data) {
+			    //console.log(data);
+			 },
+            onLoadSuccess: function(){  //加载成功时执行
+       //      	$('#table').find('input[name="btSelectItem"]').each(function(){
+			    // 	var value = $(this).attr('data-index');
+			    // 	alert(value);
+			    // })
+              //layer.msg("加载成功");
+              $('input[name="btSelectAll"],input[name="btSelectItem"]').click(function(){
+			    	var str = '';
+			    	var newstr = '';
+			    	$('#nums').val('');
+			    	$("tr.selected").each(function(e){
+
+			    		str = $(this).children('td').eq(1).html();
+			    		if(str&&str!='-'){
+			    			newstr += str+',';
+			    		}
+
+			    	});
+			    	newstr = newstr.substring(0,newstr.length-1);
+			    	$('#nums').val(newstr);
+			    });
+            },
+			onClickRow: function (row) {
+				//console.log(row);
+				//alert(row.JCBH);
+				var str = '';
+				var newstr = '';
+				//str = $('#nums').val();
+				//alert(row.state);
+				if(row.state == false || row.state == undefined){
+					var str = $('#nums').val();
+					if(row.ZFZH){
+						if(str){
+							newstr = row.ZFZH+','+str+',';
+						}else{
+							newstr = row.ZFZH+','
+						}
+					}else{
+						newstr = str+',';
+					}
+
+
+					//alert(newstr.substring(0,newstr.length-1));
+					newstr = newstr.substring(0,newstr.length-1);
+					//alert(newstr);
+
+
+					//newstr = newstr.substring(0,newstr.Length-1);
+				}else{
+					var s = str.split(',');
+
+					for(var i = 0;i<s.length;i++){
+
+						if(s[i] == row.ZFZH){
+
+							//alert(row.JCBH);
+						}else{
+							newstr += s[i]+',';
+							//alert(newstr);
+						}
+
+					}
+					newstr = newstr.substring(0,newstr.length-1);
+				}
+
+
+				$('#nums').val(newstr);
+				/*if(row.state){
+					//var str = '1122,33445,566';
+
+				}*/
+			    //window.location.href = "/qStock/qProInfo/" + row.ProductId;
+			 },
+	    });
+
+	    $('#search_btn').bind('click',function(){
+			loadData();
+		});
+
+		$('.Add').bind('click',function(){
+			var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+			var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/Admin/addZfdw?zfzh={$zfzh}"></iframe>');
+			winBody.append(ifr);
+			top.window.$('body').append(winBody);  
+		    win=winBody.dialog({   
+				title: "添加执法队伍",
+				width: 700,   
+				modal: true,   
+				shadow: false,   
+				closed: true,  
+				height: 300,
+				draggable:true,
+				maximizable:true,
+				inline:false,
+				onDestroy:function(){
+					winBody.remove();
+				},
+				buttons:[{
+					text:'提交',
+					iconCls:'icon-ok',
+					handler:function(){
+						ifr[0].contentWindow.submit(_page,$);
+					}
+				}]
+			}).panel('move',{
+			    top:200
+			});
+            //loadData();
+			win.window('open');
+		});
+		/*$('#DelAll').bind('click',function(){
+	    	var nums = $('#nums').val();
+	    	if(nums==''){
+	    		layer.alert('请选择删除项', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} )
+				return false;
+	    	}
+	    	layer.confirm('确定删除麽', {
+			   btn: ['确定', '取消'] //按钮
+			},function(){
+				//nums = $('#nums').val();
+				$.getJSON("__APP__/Home/System/delUser",{"id":nums},function(json){
+		    		//console.log(json);
+					if(json.error == 0){
+						loadData();
+						layer.msg(json.msg, {icon: 1});
+					}else{
+						layer.msg(json.msg, {icon: 2});
+					}
+				});
+			},function(){
+				layer.msg('取消删除', {icon: 1});
+			});
+	    	
+	    })*/
+	    
+	});
+
+</script>
+
+<script type="text/javascript">
+
+	var _page = self; //当前页面
+	var win = null; //弹出窗口
+	////弹出窗口回调函数
+	function closeWin(){
+		if(win!=null){
+			win.window('close');
+		}
+	}
+	function openWin(){
+		if(win!=null){
+			win.window('open');
+		}
+	}
+	function destroyWin(){
+		if(win!=null){
+			win.window('destroy');
+		}
+	}
+
+	function actionFormatter(value, row, index) {
+		//console.log(value);
+		/*if(value==1){
+			var val = '禁用';
+		}else{
+			var val = '<span style="color:orange;">启用</span>';
+		}*/
+	    return [
+	        '<a class="edit" href="javascript:void(0)" title="修改">',
+	        '修改',
+	        '</a>',
+	        '<a class="remove ml10" href="javascript:void(0)" title="删除">',
+	        '删除',
+	        '</a>'
+	    ].join('');
+	}
+	//时间换算
+	function FormatterSTime(value, row, index){
+		var val = $.myTime.UnixToDate(value/1000,true);
+		return [
+	        val
+	    ].join('');
+	}
+
+	window.actionEvents = {
+	    'click .edit': function (e, value, row, index) {
+	    	
+	    	eval("var param="+JSON.stringify(row));
+	    	//console.log(param);
+	    	var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+			var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/Admin/editZfdw?id='+param.ID+'&zfdw='+param.GROUPNAME+'&zfzh='+param.ZFZH+'"></iframe>');
+			winBody.append(ifr);
+			top.window.$('body').append(winBody);  
+		    win=winBody.dialog({   
+				title: "执法队伍修改",
+				width: 700,
+				modal: true,   
+				shadow: false,   
+				closed: true,  
+				height: 300,
+				draggable:true,
+				maximizable:true,
+				inline:false,
+				onDestroy:function(){   
+					winBody.remove();
+				},
+				buttons:[{
+					text:'提交',
+					iconCls:'icon-ok',
+					handler:function(){
+						ifr[0].contentWindow.submit(_page,$);
+					}
+				}]
+			}).panel('move',{
+			    top:200
+			});
+			win.window('open');
+	        //alert('You click like icon, row: ' + JSON.stringify(row));
+	        //console.log(value, row, index);
+	    },
+
+	    'click .remove': function (e, value, row, index) {
+	    	eval("var param="+JSON.stringify(row));
+	    	//console.log(param);
+	    	layer.confirm('确定要删除该执法队伍?', {icon: 3, title:'提示'}, function(index){
+				  $.getJSON("__APP__/Home/Admin/zfdwDel",{"id":param.ID},function(json){
+		    		//console.log(json);
+					if(json.error == 0){
+						loadData();
+						layer.msg(json.msg, {icon: 1});
+					}else{
+						layer.msg(json.msg, {icon: 2});
+					}
+				});
+			  
+			  layer.close(index);
+			});
+	        //alert('You click remove icon, row: ' + JSON.stringify(row));
+	        //console.log(value, row, index);
+	    }
+	};
+
+
+
+	//提示
+	function showDiv(msgs,status){
+		/*layer.alert(msg, {
+			skin: 'layui-layer-molv' //样式类名
+			,closeBtn: status
+		});*/
+		if(status==1){
+			loadData();
+		}
+		layer.msg(msgs, {icon: status});
+	}
+</script>
+
+
+

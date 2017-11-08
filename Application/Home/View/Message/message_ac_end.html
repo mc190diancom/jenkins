@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		
+	
+		
+	</head>
+	<body>
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+		<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="#"><dt id="user" class="dldt border" >道路运输执法记录查询</dt></a>
+					<a href="#"><dt id="123" class="dldt ">外勤电子文书查询</dt></a>
+				</dl>
+			</div>
+				<div class="center_right">
+				
+			<div class="center_right_top">
+					<span>查询结果</span>
+				</div>
+				<div class="center_right_botton">
+					<!--startprint6-->
+				<table border="0" cellspacing="0" cellpadding="">
+					<tr class="list_head">
+						<th width="3%" style="font-family: '微软雅黑';font-size: 16px;">序号</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">稽查人员</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">大队</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">创建时间</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">车牌号码</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">驾驶员姓名</th>
+						<th width="7%" style="font-family: '微软雅黑';font-size: 16px;">行业</th>
+					</tr>
+					<volist name="R1" id="v" key="k">
+						<tr  <if condition="$k%2 eq 0"> class="color"</if>>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$k}</td>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.zfry1}</td>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.zfdwmc}</td>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.zfsj|date='Y-m-d h:i:s',###}</td>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.vname}</td>
+							<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.driverName}</td>
+							<td style=" font-family: '微软雅黑';font-size: 16px;" align="center">{$v.hylb}</td>
+						</tr>
+					</volist>
+
+				
+				
+				</table>
+					<!--endprint6-->
+				</div>
+					<div class="page">
+						<ul>
+							<if condition="$page neq 1">
+								<a href="{:U('Message/message_ac_end')}?vName={$c.vName}&driverName={$c.driverName}&corpName={$c.corpName}&zfdwmc={$c.zfdwmc}&page={$per}&startTime={$st}&endTime={$en}"><li style="width: 70px;">上一页</li>  </a>
+							</if>
+							<for start="1" end="$times+1">
+								<if condition="$page eq $i">
+									<li class="page_active">{$i}</li>
+									<else />
+									<a href="{:U('Message/message_ac_end')}?vName={$c.vName}&driverName={$c.driverName}&corpName={$c.corpName}&zfdwmc={$c.zfdwmc}&page={$i}&startTime={$st}&endTime={$en}"><li>{$i}</li></a>  </a>
+								</if>
+							</for>
+							<if condition="$page neq $times">
+								<a href="{:U('Message/message_ac_end')}?vName={$c.vName}&driverName={$c.driverName}&corpName={$c.corpName}&zfdwmc={$c.zfdwmc}&page={$next}&startTime={$st}&endTime={$en}"><li style="width: 70px;">下一页</li>  </a>
+							</if>
+						</ul>
+						<p>第{$page}/{$times}页 &nbsp;&nbsp;&nbsp;共{$total}条</p>
+					</div>
+				<div class="clear"></div>
+				<div class="return">
+					<a href="{:U('Message/message_ac')}"><input type="submit" name="" id="" value="返回" />  </a>
+				</div>
+					<div class="return" style="margin-right: 15px">
+						<input type="submit" onclick="preview(6)" name="" id="" value="打印" />
+					</div>
+			</div>
+			
+			
+		
+				
+		</div>
+		
+		
+	</body>
+</html>
+<script type="text/javascript">
+	function preview(oper)
+	{
+		if (oper < 10)
+		{
+			bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+			sprnstr="<!--startprint6-->";//设置打印开始区域
+			eprnstr="<!--endprint6-->";//设置打印结束区域
+			prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+			prnhtmlprnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+			window.document.body.innerHTML=prnhtml;
+			window.print();
+			window.document.body.innerHTML=bdhtml;
+		} else {
+			window.print();
+		}
+	}
+</script>
+<script>
+
+
+
+
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+

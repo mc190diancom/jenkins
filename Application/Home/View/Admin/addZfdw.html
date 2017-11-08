@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+		<title>出租汽车稽查系统</title>
+		<script src="__JS__/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<script src="__JS__/layer/layer.js"></script>
+<style type="text/css">
+.info{
+	width: 600px;
+	margin:20px auto;
+}
+.info tr{
+
+	height: 35px;
+}
+.td-left{
+	border-right: 1px solid #CDCDCD;
+}
+.font-tr{
+	width: 300px;
+}
+.sub-title{
+	text-indent: 22px;
+	color: #fff;
+	background-color: #41C3D6;
+}
+ input[type="text"]{
+	width: 99%;
+    height: 100%;
+}
+.laydate-icon.input{
+	height: 27px;
+    width: 280px;
+    line-height: 27px;
+}
+select{
+	width: 100%;
+    height: 100%;
+}
+</style>
+	</head>
+	<body>
+
+		
+		<form id="form1" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="zfzh" id="zfzh" value="{$zfzh}" />
+		<div class="center">
+				<div class="info">
+					
+					<table border="1" cellspacing="0" cellpadding="">
+						<tr>
+							<td align="left" colspan="2" class="sub-title">
+									添加执法队伍
+							</td>
+						</tr>
+						<tr class="color">
+							<td align="center" class="font-tr td-left" >执法队伍：</td>
+							<td align="center" class="font-tr" >
+								<!--<input type="text" readonly style="height: 25px;" class="input xxl" name="zfdw" id="zfdw" value="&#45;&#45;请选择&#45;&#45;" />
+								<ul class="dadui" id="dadui"  style="width:60%;display:none;">
+									<li>全部</li>
+									<volist name="compName" id="v">
+										<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+									</volist>
+								</ul>-->
+								<select name="zfdw">
+									<volist id="v" name="compNameZ">
+										<option value="{$v.ZFDWMC}">{$v.ZFDWMC}</option>
+									</volist>
+								</select>
+							</td>
+						</tr>
+						
+					</table>
+
+		</div>
+	</div>
+	</form>
+
+
+		<script type="text/javascript">
+			function submit(_page,jq){
+				//
+				$('#form1').form('submit',{
+					url:"__APP__/Home/Admin/ajaxaddZfdw",
+					onSubmit: function(){
+						var zfzh = $("#zfzh").val();//
+						var zfdw = $("#zfdw").val();//执法队伍
+						var cyzgReg = /^\w+$/;
+						var driverNameReg = /^[\u4E00-\u9FA5]{1,6}$/;
+						if(zfdw != ''){
+							
+						}else{
+							layer.alert('执法队伍不能为空', {
+									skin: 'layui-layer-molv' //样式类名
+									,closeBtn: 0
+								} )
+								return false;
+						}
+						
+						var isValid = $('#form1').form('validate');
+						return isValid;
+					},
+				    success: function(data){
+					    	eval("var json ="+data);
+					    	//console.log(json);
+					    	if(json.error == 0){
+								parent.window.showDiv('恭喜！'+json.msg,1);
+					    		//_page.destroyWin();
+					    		_page.closeWin();
+
+					    	}else{
+								parent.window.showDiv('错误！'+json.msg,2);
+								_page.closeWin();
+					    	}
+			    		}
+				});
+			}
+		</script>
+		
+	</body>
+</html>
+
+
+
+

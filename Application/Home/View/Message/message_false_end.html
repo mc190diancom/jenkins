@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+		<script type="text/javascript" src="http://cdn.webfont.youziku.com/wwwroot/js/wf/youziku.api.min.js"></script>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		
+		
+	
+		
+	</head>
+	<body>
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+		<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="{:U('Message/message_ac')}"><dt id="user" class="dldt">道路运输执法记录查询</dt></a>
+					<a href="#"><dt id="sim" class="dldt  border" >道路运输违法数量查询</dt>	</a>
+					<a href="{:U('Message/getMessageComplain')}"><dt id="fal" class="dldt " >道路运输 投诉记录查询</dt>	</a>
+				</dl>
+			</div>
+				<div class="center_right">
+				
+			<div class="center_right_top">
+					<span>查询结果</span>
+				</div>
+				<div class="center_right_botton">								
+				<table border="0" cellspacing="0" cellpadding="">
+					<tr class="list_head">
+						<th width="3%" style="font-family: '微软雅黑';font-size: 16px;">序号</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">车牌号码</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">当事人</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">检查时间</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">案件状态</th>
+						<th width="8%" style="font-family: '微软雅黑';font-size: 16px;">行业类型</th>
+						<th width="7%" style="font-family: '微软雅黑';font-size: 16px;">车辆类型</th>
+						<th width="3%" style="font-family: '微软雅黑';font-size: 16px;">详情</th>
+					</tr>
+
+					<volist name="json" id="v" key="k">
+						<tr  <if condition="$k%2 eq 0"> class="color"</if>>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$k}</td>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.vname}</td>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.danshiren}</td>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.checkTime}</td>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.status}</td>
+						<td align="center" style="font-family: '微软雅黑';font-size: 16px;">{$v.hylb}</td>
+						<td style=" font-family: '微软雅黑';font-size: 16px;" align="center">{$v.vType}</td>
+						<td  align="center "><a href="{:U('Message/getMessageFalseEndDet',array('k'=>$k))}" style=" font-family: '微软雅黑';font-size: 16px; color: #00CED1;">查看 </a></td>
+						</tr>
+					</volist>
+
+					
+				
+				</table>
+				</div>
+				<div class="page">
+					<ul>
+						<li style="width: 70px;">上一页</li>
+						<li>1</li>
+						<li>2</li>
+						<li>3</li>
+						<li>4</li>
+						<li>5</li>
+						<li style="width: 70px;">下一页</li>
+					</ul>
+					<p>第1/1页 &nbsp;&nbsp;&nbsp;共11页</p>
+				</div>
+				<div class="clear"></div>
+				<div class="return">
+					<input type="submit" name="" id="" value="返回" />
+				</div>
+			</div>
+			
+			
+		
+				
+		</div>
+		
+		
+	</body>
+</html>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+

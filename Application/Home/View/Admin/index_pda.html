@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>道路运输行业现场稽查系统</title>
+	<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+</head>
+<body>
+<!--
+    作者：985498384@qq.com
+    时间：2016-05-09
+    描述：框架头部
+-->
+<include file="Public:head" />
+<!--
+    作者：985498384@qq.com
+    时间：2016-05-09
+    描述：中间部分
+-->
+<div class="center">
+	<div class="center_left">
+		<dl>
+			<a href="index.html"><dt id="user" class="dldt">用户管理</dt></a>
+			<a href="index_sim.html"><dt id="sim" class="dldt">SIM卡管理</dt></a>
+			<a href="index_pda.html"><dt id="fal" class="dldt border">终端管理</dt></a>
+			<a href="user.html"><dt id="admin" class="dldt">角色管理</dt>	</a>
+		</dl>
+	</div>
+	<div class="center_right">
+		<form action="{:U('Admin/index_pda')}" method="post" onsubmit="return check()">
+
+		<div class="sim_1">
+			<input class="input" readonly type="text" id="scm" name="sim" value="{$sim}"   >
+			<ul style="position: absolute; top: 220px;left:18.4%;z-index: 1" class="show" id="scc" >
+				<li>删除PDA</li>
+				<li>修改PDA</li>
+				<li>查看PDA</li>
+			</ul>
+		</div>
+
+		<div class="title_1">
+			检索项
+		</div>
+
+
+
+
+			<div class="search_from">
+				<dl style="position: relative">
+					<dd >
+						<div class="left">用户姓名</div>
+						<div class="right">
+							<input type="text" class="input"  style="height: 25px;" id="name"  name="name" value="{$name}" />
+						</div>
+						<div class="clear"></div>
+					</dd>
+					<dd >
+						<div class="left">执法证号</div>
+						<div class="right">
+							<input type="text" class="input" style="height: 25px;" id="zfzh" name="ZFZH" value="{$ZFZH}" />
+						</div>
+						<div class="clear"></div>
+					</dd>
+					<dd >
+						<div class="left">大队</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px;" class="input xxl" name="dd" id="dd" value="{$dd}" />
+							<ul class="dadui show" id="dadui"   style="width:96%;">
+								<volist name="compName" id="v">
+									<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+								</volist>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd >
+						<div class="left">中队</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px; " class="input xxl" name="zd" id="zd" value="{$zd}" />
+							<ul class="dadui show"  id="zhongdui" style="height: 0px;border: 1px solid #fff;">
+								<!-- <volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist> -->
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd >
+						<div class="left">车组</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px;" class="input xxl" name="cz" id="cz" value="{$cz}" />
+							<ul class="dadui show" id="chezu" style="height: 0px;border: 1px solid #fff;">
+								<!-- <volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist> -->
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd >
+						<div class="left">IMEI卡号</div>
+						<div class="right">
+							<input type="text" class="input" style="height: 25px;"  name="imei_code" id="imei_code" value="" />
+						</div>
+						<div class="clear"></div>
+					</dd>
+				</dl>
+			</div>
+			<div class="submit" id="button">
+				<input type="button" name="" id="" value="查询" />
+			</div>
+		</form>
+
+		<!-- =============结果====================== -->
+		<div style="margin-top:80px;margin-bottom:110px;">
+			<if condition="$show eq 'index_pda_end'">
+			<div class="center_right_top">
+					<span>查询结果</span>
+				</div>
+				<div class="center_right_botton">								
+				<table border="0" cellspacing="0" cellpadding="">
+					<tr class="list_head">
+						<th width="3%" class="font-th">序号</th>
+						<th width="8%" class="font-th">用户姓名</th>
+						<th width="8%" class="font-th">执法证号</th>
+						<th width="8%" class="font-th">大队</th>
+						<th width="8%" class="font-th">中队</th>
+						<th width="8%" class="font-th">车组</th>
+						<th width="8%" class="font-th">IMEI卡号</th>
+						<th width="7%" class="font-th">操作</th>
+					</tr>
+					<volist name="R" id="v" key="k">
+					<tr <if condition="$k%2 eq 0"> class="color"</if>>
+						<td align="center" class="font-tr">{$k}</td>
+						<td align="center" class="font-tr">{$v.NAME}</td>
+						<td align="center" class="font-tr">{$v.ZFZH}</td>
+						<td align="center" class="font-tr">{$v.ZFDWMC}</td>
+						<td align="center" class="font-tr">{$v.SSZD}</td>
+						<td align="center" class="font-tr">{$v.SSCZ}</td>
+						<td align="center" class="font-tr">{$v.IMEI_CODE}</td>
+						<td  align="center"><a onclick=del('{$v.ZFZH}') style="font-size: 14px; color: red;">删除</a></td>
+					</tr>
+						</volist>
+				</table>
+				</div>
+					<div class="page">
+						<ul>
+							<if condition="($times gt 3) and ($page gt 3)">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page=1"><li style="width: 70px;">首页</li></a> 
+							</if>
+							<if condition="$page neq 1">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$per}"><li style="width: 70px;">上一页</li>  </a>
+							</if>
+							<for start="1" end="$times+1">
+								<if condition="$page eq $i">
+									<li class="page_active">{$i}</li>
+								<elseif condition="((($i-$page) elt 2) and ($i-$page gt -3)) and ($page gt 3)" />
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								<elseif condition="($page elt 3) and ($i elt 5)"/>
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								</if>
+							</for>
+							<if condition="$page neq $times">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$next}"><li style="width: 70px;">下一页</li>  </a>
+							</if>
+							<if condition="($times gt 5) and ($page lt ($times-2))">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$times}"><li style="width: 70px;">尾页</li></a> 
+							</if>
+						</ul>
+						<p>第{$page}/{$times}页 &nbsp;&nbsp;&nbsp;共{$total}条</p>
+					</div>
+			</div>
+			<script>
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+<script>
+	function del(ZFZH){
+
+		layer.confirm('你确认删除该账号吗？', {
+			btn: ['删除','取消'] //按钮
+		}, function(){
+			$.post("{:U('Admin/delPerson')}",{ZFZH:ZFZH},function(data){
+				if(data.err == 0)
+				{
+					layer.msg(data.errorMsg, {icon: 1});
+					window.location.reload()
+				}
+				else
+				{
+					layer.msg(dataerrorMsg, {icon: 2});
+				}
+			})
+		} )
+
+
+	}
+</script>
+
+			<elseif condition="$show eq 'index_pda_jy_end'" />
+				<div class="center_right_top">
+					<span>查询结果</span>
+				</div>
+				<div class="center_right_botton">								
+				<table border="0" cellspacing="0" cellpadding="">
+					<tr class="list_head">
+						<th width="3%" class="font-th">序号</th>
+						<th width="8%" class="font-th">用户姓名</th>
+						<th width="8%" class="font-th">执法证号</th>
+						<th width="8%" class="font-th">大队</th>
+						<th width="8%" class="font-th">中队</th>
+						<th width="8%" class="font-th">车组</th>
+						<th width="8%" class="font-th">IMEI卡号</th>
+						<th width="7%" class="font-th">操作</th>
+					</tr>
+					<volist name="R" id="v" key="k">
+					<tr <if condition="$k%2 eq 0"> class="color"</if>>
+						<td align="center" class="font-tr">{$k}</td>
+						<td align="center" class="font-tr">{$v.NAME}</td>
+						<td align="center" class="font-tr">{$v.ZFZH}</td>
+						<td align="center" class="font-tr">{$v.ZFDWMC}</td>
+						<td align="center" class="font-tr">{$v.SSZD}</td>
+						<td align="center" class="font-tr">{$v.SSCZ}</td>
+						<td align="center" class="font-tr">{$v.IMEI_CODE}</td>
+						<td align="center" style="font-size: 14px; color: #18B008">
+							<a style="color: #18B008; cursor: pointer" href="{:U('Admin/index_pda_update')}?zfzh={$v.ZFZH}"> 修改</a>
+						</td>
+					</tr>
+						</volist>
+				</table>
+				</div>
+					<div class="page">
+						<ul>
+							<if condition="($times gt 3) and ($page gt 3)">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page=1"><li style="width: 70px;">首页</li></a> 
+							</if>
+							<if condition="$page neq 1">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$per}"><li style="width: 70px;">上一页</li>  </a>
+							</if>
+							<for start="1" end="$times+1">
+								<if condition="$page eq $i">
+									<li class="page_active">{$i}</li>
+								<elseif condition="((($i-$page) elt 2) and ($i-$page gt -3)) and ($page gt 3)" />
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								<elseif condition="($page elt 3) and ($i elt 5)"/>
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								</if>
+							</for>
+							<if condition="$page neq $times">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$next}"><li style="width: 70px;">下一页</li>  </a>
+							</if>
+							<if condition="($times gt 5) and ($page lt ($times-2))">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$times}"><li style="width: 70px;">尾页</li></a> 
+							</if>
+						</ul>
+						<p>第{$page}/{$times}页 &nbsp;&nbsp;&nbsp;共{$total}条</p>
+					</div>
+			</div>
+<script>
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+<script>
+
+	function ref(ZFZH){
+
+			$.post("{:U('Admin/casPerson')}",{ZFZH:ZFZH,cc:cc},function(data){
+				if(data.err == 0)
+				{
+					layer.msg(data.errorMsg, {icon: 1});
+					window.location.reload()
+				}
+				else
+				{
+					layer.msg(dataerrorMsg, {icon: 2});
+				}
+			})
+
+
+
+	}
+</script>
+			<elseif condition="$show eq 'index_pda_se_end'" />
+
+				<div class="center_right_top">
+					<span>查询结果</span>
+				</div>
+				<div class="center_right_botton">								
+				<table border="0" cellspacing="0" cellpadding="">
+					<tr class="list_head">
+						<th width="3%" class="font-th">序号</th>
+						<th width="8%" class="font-th">用户姓名</th>
+						<th width="8%" class="font-th">执法证号</th>
+						<th width="8%" class="font-th">大队</th>
+						<th width="8%" class="font-th">中队</th>
+						<th width="8%" class="font-th">车组</th>
+						<th width="8%" class="font-th">IEMI卡号</th>
+						<th width="7%" class="font-th">操作</th>
+					</tr>
+					<volist name="R" id="v" key="k">
+					<tr <if condition="$k%2 eq 0"> class="color"</if>>
+						<td align="center" class="font-tr">{$k}</td>
+						<td align="center" class="font-tr">{$v.NAME}</td>
+						<td align="center" class="font-tr">{$v.ZFZH}</td>
+						<td align="center" class="font-tr">{$v.ZFDWMC}</td>
+						<td align="center" class="font-tr">{$v.SSZD}</td>
+						<td align="center" class="font-tr">{$v.SSCZ}</td>
+						<td align="center" class="font-tr">{$v.IMEI_CODE}</td>
+						<td align="center" style="font-size: 14px; color: #18B008">
+							<a style="color: #18B008; cursor: pointer" href="{:U('Admin/toSelectPda')}?zfzh={$v.ZFZH}"> 查看</a>
+						</td>
+					</tr>
+						</volist>
+				</table>
+				</div>
+					<div class="page">
+						<ul>
+							<if condition="($times gt 3) and ($page gt 3)">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page=1"><li style="width: 70px;">首页</li></a> 
+							</if>
+							<if condition="$page gt 1">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$per}"><li style="width: 70px;">上一页</li>  </a>
+							</if>
+							<for start="1" end="$times+1">
+								<if condition="$page eq $i">
+									<li class="page_active">{$i}</li>
+								<elseif condition="((($i-$page) elt 2) and ($i-$page gt -3)) and ($page gt 3)" />
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								<elseif condition="($page elt 3) and ($i elt 5)"/>
+									<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$i}"><li>{$i}</li></a>  </a>
+								</if>
+							</for>
+							<if condition="$page lt $times">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$next}"><li style="width: 70px;">下一页</li>  </a>
+							</if>
+							<if condition="($times gt 5) and ($page lt ($times-2))">
+								<a href="{:U('Admin/index_pda')}?ZFZH={$c.ZFZH}&name={$c.NAME}&sim={$c.sim}&dd={$c.ZFDWMC}&page={$times}"><li style="width: 70px;">尾页</li></a> 
+							</if>
+						</ul>
+						<p>第{$page}/{$times}页 &nbsp;&nbsp;&nbsp;共{$total}条</p>
+					</div>
+			</div>
+<script>
+
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+<script>
+
+	function ref(ZFZH){
+
+			$.post("{:U('Admin/casPerson')}",{ZFZH:ZFZH,cc:cc},function(data){
+				if(data.err == 0)
+				{
+					layer.msg(data.errorMsg, {icon: 1});
+					window.location.reload()
+				}
+				else
+				{
+					layer.msg(dataerrorMsg, {icon: 2});
+				}
+			})
+
+
+
+	}
+</script>
+
+			</if>
+			
+		</div>
+		<!-- =============结果====================== -->
+	</div>
+</div>
+</body>
+</html>
+<script>
+	$("#scm").click(function(){
+		$("#scc").removeClass('show');
+		$("#scc li").click(function(){
+			var sc = $(this).html()
+			$("#scm").val(sc);
+			$("#scc").addClass('show');
+		})
+	})
+	$("#dd").click(function(){
+		if($("#dadui").hasClass('show'))
+		{
+			$("#dadui").removeClass('show');
+		}
+		else
+
+		{
+			$("#dadui").addClass('show');
+		}
+
+		$("#dadui li").click(function(){
+			var ht = $(this).html() ;
+			$("#dd").val(ht);
+			$('#zhongdui').css('height',0);
+			$("#dadui").addClass('show');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : ht,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSZD']+'">'+data[i]['SSZD']+'</li>'
+					};
+					$('#zhongdui').css('height',200);
+					$('#zhongdui').css('border','1px solid #41C3D6');
+					$('#zhongdui').css('display','none');
+					$('#zhongdui').html(str);
+					$('#zd').val('--请选择--');
+					$('#cz').val('--请选择--');
+
+					
+					 console.log(data);
+				}
+			});
+		})
+	})
+	$("#zd").click(function(){
+		$('#zhongdui').css('display','block');
+		/*if($("#zhongdui").hasClass('show'))
+		{
+			$("#zhongdui").removeClass('show');
+		}
+		else
+
+		{
+			$("#zhongdui").addClass('show');
+		}*/
+		$("#zhongdui li").click(function(){
+			var sszd = $(this).html() ;
+			$("#zd").val(sszd);
+			var zfdwmc = $("#dd").val();
+			$('#zhongdui').css('display','none');
+			$("#zhongdui").removeClass('show');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : zfdwmc,
+					sszd : sszd,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSCZ']+'">'+data[i]['SSCZ']+'</li>'
+					};
+					$('#chezu').css('height',200);
+					$('#chezu').css('border','1px solid #41C3D6');
+					$('#chezu').css('display','none');
+					$('#chezu').html(str);
+					$('#cz').val('--请选择--');
+
+					
+					 console.log(data);
+				}
+			});
+		})
+	});
+	$("#cz").click(function(){
+		/*if($("#chezu").hasClass('show'))
+		{
+			$("#chezu").removeClass('show');
+		}
+		else
+
+		{
+			$("#chezu").addClass('show');
+		}*/
+		$('#chezu').css('display','block');
+		$("#chezu li").click(function(){
+			var cz = $(this).html() ;
+			$("#cz").val(cz);
+			$('#chezu').css('display','none');
+		})
+	})
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');
+	})
+	$("#button").click(function(){
+		var name = $("#name").val();
+		var zfzh = $("#zfzh").val();
+		var dd = $("#dd").val();
+		if(dd == '--请选择--'&& zfzh=='' && name=='')
+		{
+			layer.alert('请输入相对应的内容', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+		}
+		else
+		{
+			$("form").submit();
+		}
+
+	})
+
+		function check(){
+		var driverName = $("#name").val();//姓名
+			var cyzg = $("#zfzh").val();//从业资格证
+			var imei_code = $("#imei_code").val();
+			var driverNameReg = /^[\u4E00-\u9FA5]{1,6}$/;
+			var cyzgReg = /^\w+$/;
+		
+			if(driverName != ''){
+				if (!driverNameReg.test(driverName)) {
+					layer.alert('请填写正确的姓名', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+
+			if(cyzg != ''){
+				if (!cyzgReg.test(cyzg)) {
+					layer.alert('执法证号', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+
+			if(imei_code != ''){
+				if (!cyzgReg.test(imei_code)) {
+					layer.alert('请填写正确IMEI卡号', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+	}
+</script>
+
+<script type="text/javascript">
+	$(function(){
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height-150);
+	})
+</script>

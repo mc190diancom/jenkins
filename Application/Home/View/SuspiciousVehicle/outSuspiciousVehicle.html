@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+
+		<include file="Public:common" />
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		
+		<script src="__JS__/layer/layer.js"></script>
+
+		<script type="text/javascript" src="http://101.200.176.10/lib/easyui/jquery.easyui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+<style type="text/css">
+.info{
+	width: 600px;
+	margin:20px auto;
+}
+.info tr{
+
+	height: 35px;
+}
+.td-left{
+	border-right: 1px solid #CDCDCD;
+}
+.font-tr{
+	width: 300px;
+}
+.sub-title{
+	text-indent: 22px;
+	color: #fff;
+	background-color: #41C3D6;
+}
+ input[type="text"]{
+	width: 99%;
+    height: 100%;
+}
+.laydate-icon.input{
+	height: 27px;
+    width: 280px;
+    line-height: 27px;
+}
+</style>
+	</head>
+	<body>
+
+		
+		<form id="form1" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="{$id}" />
+		<div class="center">
+				<div class="info">
+					
+					<table border="1" cellspacing="0" cellpadding="">
+					<tr>
+						<td align="left" colspan="2" class="sub-title">
+								出库信息
+						</td>
+					</tr>
+
+					<!-- <tr >
+						<td align="center" class="font-tr td-left" >稽查编号：</td>
+						<td align="center" class="font-tr" >{$R.JCBH}</td>
+					</tr> -->
+					<tr>
+						<td align="center" class="font-tr td-left" >出库时间：</td>
+						<td align="center" class="font-tr" >
+							<input placeholder="请输入日期" name="startTime" class="easyui-datetimebox" style="height: 25px;width: 100%;position: relative;border: 1px solid #41C3D6;border-radius: 0;" id="demo" value="{$startDate}">
+						</td>
+					</tr>
+					<tr style="height: 100px;">
+						<td align="center" class="font-tr td-left" >出库说明：</td>
+						<td align="center" class="font-tr" >
+							<textarea name="CKSM" style="width: 98%;height: 100%;">{$R.FGGD}</textarea>
+						</td>
+					</tr>
+					<tr class="color">
+						<td align="center" class="font-tr td-left" >操作人员：</td>
+						<td align="center" class="font-tr" >
+							<input type="text" name="CZY" id="CZY" value="" />
+						</td>
+					</tr>
+				</table>
+
+		</div>
+	</div>
+	</form>
+
+
+		<script type="text/javascript">
+			function submit(_page,jq){
+				
+				$('#form1').form('submit',{
+					url:"__APP__/Home/SuspiciousVehicle/ajaxoutSuspiciousVehicle",
+					onSubmit: function(){
+						var CZY = $('#CZY').val();
+						if(CZY == ''){
+							layer.alert('请填写操作人员', {
+									skin: 'layui-layer-molv' //样式类名
+									,closeBtn: 0
+								} )
+								return false;
+						}
+						var isValid = $('#form1').form('validate');
+						return isValid;
+					},
+				    success: function(data){
+				    		_page.closeWin();
+					    	eval("var json ="+data);
+					    	console.log(json);
+					    	if(json.error == 0){
+								parent.window.showDiv('恭喜！'+json.msg,1);
+					    		//_page.destroyWin();
+					    	}else{
+					    		
+								parent.window.showDiv('错误！'+json.msg,2);
+					    	}
+			    		}
+				});
+			}
+
+		</script>
+		
+	</body>
+</html>
+
+
+
+

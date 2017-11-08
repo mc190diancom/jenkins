@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+	</head>
+	<body>
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+		<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="index.html"><dt id="user" class="dldt">用户管理</dt></a>
+					<a href="index_sim.html"><dt id="sim" class="dldt">SIM卡管理</dt></a>
+					<a href="index_pda.html"><dt id="fal" class="dldt">终端管理</dt></a>
+					<a href="user.html"><dt id="admin" class="dldt border">角色管理</dt>	</a>
+				</dl>
+			</div>
+			<div class="center_right">
+				<form action="{:U('Admin/user')}" method="post" onsubmit="return check()">
+				<div class="title_1" style="top:210px">
+					检索项
+				</div>
+
+				<div class="search_from">
+				<dl style="position: relative">
+					<dd >
+						<div class="left">用户姓名</div>
+						<div class="right">
+							<input type="text" class="input"  style="height: 25px; " id="name"  name="name" value="{$name}" />
+						</div>
+						<div class="clear"></div>
+					</dd>
+					<dd>
+						<div class="left">执法证号</div>
+						<div class="right">
+							<input type="text" class="input" style="height: 25px; ;" id="zfzh" name="ZFZH" value="{$ZFZH}" />
+						</div>
+						<div class="clear"></div>
+					</dd>
+					<dd >
+						<div class="left">大队</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px; " class="input xxl" name="dd" id="dd" value="{$dd}" />
+							<ul class="dadui show" id="dadui"   style="width:96%;">
+								<volist name="compName" id="v">
+									<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+								</volist>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd >
+						<div class="left">中队</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px;" class="input xxl" name="zd" id="zd" value="{$zd}" />
+							<ul class="dadui show"  id="zhongdui" style="height: 0px;border: 1px solid #fff;">
+								<!-- <volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist> -->
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd >
+						<div class="left">车组</div>
+						<div class="right">
+							<input type="text" readonly style="height: 25px;" class="input xxl" name="cz" id="cz" value="{$cz}" />
+							<ul class="dadui show" id="chezu" style="height: 0px;border: 1px solid #fff;">
+								<!-- <volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist> -->
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+					</dd>
+					<dd style="letter-spacing:0.15vw">
+						<div class="left">权限级别</div>
+						<div class="right">
+							<input type="text" class="input xxl" style="height: 25px; " name="show_qx" id="qx"  value="{$show_qx}" readonly />
+							<input type="hidden" class="input" style="height: 25px; " id="qx1" name="qx" value="{$qx}" readonly />
+							<ul class="dadui show" id="role" style="position: absolute;" >
+								<volist name="CC" id="v">
+									<li><span>{$v.MEMO}</span><p class="show">{$v.ID}<p></li>
+								</volist>
+							</ul>
+						</div>
+						<div class="clear"></div>
+					</dl>
+			</div>	
+					
+			
+				<!-- <div class="search_from">
+					<dl style="position: relative">
+						<dd>用户姓名<input type="text" class="input"  style="height: 25px;  width:50%;" id="name"  name="name" value="" /></dd>
+						<dd>执法证号<input type="text" class="input" style="height: 25px;  width:50%;" id="zfzh" name="ZFZH" value="" /></dd>
+						<dd style="text-indent:32px;letter-spacing:0.2vw">
+
+							大队<input type="text" readonly style="height: 25px; width:50%;" class="input xxl" name="ZHDWMC" id="dd" value="{$dd}" />
+							<ul class="dadui show" id="dadui"   style="width:100%;left: 30%;">
+							<volist name="compName" id="v">
+								<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+							</volist>
+						</ul>
+
+						</dd>
+						<dd>
+
+							中&nbsp;&nbsp;&nbsp;&nbsp;队<input type="text" readonly style="height: 25px; width:50%;" class="input xxl" name="zd" id="zd" value="--请选择--" />
+							<ul class="dadui show" id="zd1">
+								<volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist>
+							</ul>
+
+						</dd>
+						<dd>
+
+							车&nbsp;&nbsp;&nbsp;&nbsp;组<input type="text" readonly style="height: 25px; width:50%;" class="input xxl" name="cz" id="cz" value="--请选择--" />
+							<ul class="dadui show" id="cz1">
+								<volist name="compName" id="v">
+									<li value="{$v.compName}">{$v.compName}</li>
+								</volist>
+							</ul>
+
+						</dd>
+						<dd>权限级别<input type="text" class="input xxl" style="height: 25px;  width:50%;" id="qx"  value="--请选择--"readonly />
+							<input type="hidden" class="input" style="height: 25px;  width:50%;" id="qx1" name="qx" value="" readonly /></dd>
+
+						<ul class="dadui show" id="role" style="position: absolute;left: 71.4%; top: 118px; width: 12.9%;" >
+							<volist name="CC" id="v">
+								<li><span>{$v.MEMO}</span><p class="show">{$v.ID}<p></li>
+							</volist>
+						</ul>
+						</dl>
+				</div> -->
+				<div class="submit" id="button">			
+					<input type="button" name=""  value="查询" />
+				</div>
+				</form>
+
+				<!-- =============结果====================== -->
+				<if condition="$show eq 'index_user_jy_end'">
+				<div style="margin-top:80px;margin-bottom:110px;">
+					<a href="{:U('Admin/addUser')}">
+					<input type="button"  value="添加管理员" style="background-color: #008B8B; width: 100px; height: 30px; margin-bottom: 20px; color: white; cursor: pointer">
+					</a>
+				<div class="center_right_top">
+						<span>查询结果</span>
+					</div>
+					<div class="center_right_botton">								
+					<table border="0" cellspacing="0" cellpadding="">
+						<tr class="list_head">
+							<th width="3%"  class="font-th">序号</th>
+							<th width="8%"  class="font-th">用户姓名</th>
+							<th width="8%"  class="font-th">执法证号</th>
+							<th width="8%"  class="font-th">大队</th>
+							<th width="8%"  class="font-th">中队</th>
+							<th width="8%"  class="font-th">车组</th>
+							<th width="8%"  class="font-th">权限</th>
+							<th width="7%"  class="font-th">操作</th>
+						</tr>
+						<volist name="R" id="v" key="k">
+						<tr <if condition="$k%2 eq 0"> class="color"</if>>
+							<td align="center"  class="font-tr">{$k}</td>
+							<td align="center"  class="font-tr">{$v.NAME}</td>
+							<td align="center"  class="font-tr">{$v.ZFZH}</td>
+							<td align="center"  class="font-tr">{$v.ZFDWMC}</td>
+							<td align="center"  class="font-tr">{$v.SSZD}</td>
+							<td align="center"  class="font-tr">{$v.SSCZ}</td>
+							<td align="center"  class="font-tr">{$v.MEMO}</td>
+							<td align="center" style="font-size: 16px; color: #18B008">
+								<a style="color: #18B008;" href="{:U('Admin/index_user_update')}?zfzh={$v.ZFZH}&role_id={$v.T_ROW_ID}&role_name={$v.MEMO}&name={$v.NAME}">修改</a>
+								&nbsp;
+								<a style="color: red; cursor: pointer" onclick=del('{$v.ZFZH}')>删除</a>
+
+							</td>
+						</tr>
+							</volist>
+					</table>
+					</div>
+						<div class="page">
+							<ul>
+								<if condition="($times gt 3) and ($page gt 3)">
+									<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page=1"><li style="width: 70px;">首页</li></a> 
+								</if>
+								<if condition="$page gt 1">
+									<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page={$per}"><li style="width: 70px;">上一页</li>  </a>
+								</if>
+								<for start="1" end="$times+1">
+									<if condition="$page eq $i">
+										<li class="page_active">{$i}</li>
+									<elseif condition="((($i-$page) elt 2) and ($i-$page gt -3)) and ($page gt 3)" />
+										<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page={$i}"><li>{$i}</li></a>  </a>
+									<elseif condition="($page elt 3) and ($i elt 5)"/>
+										<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page={$i}"><li>{$i}</li></a>  </a>
+									</if>
+								</for>
+								<if condition="$page lt $times">
+									<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page={$next}"><li style="width: 70px;">下一页</li>  </a>
+								</if>
+								<if condition="($times gt 5) and ($page lt ($times-2))">
+									<a href="{:U('Admin/user')}?dd={$c.ZFDWMC}&zd={$c.SSZD}&cz={$c.SSCZ}&ZFZH={$c.ZFZH}&name={$c.NAME}&qx={$c.ROLE_ID}&page={$times}"><li style="width: 70px;">尾页</li></a> 
+								</if>
+							</ul>
+							<p>第{$page}/{$times}页 &nbsp;&nbsp;&nbsp;共{$total}条</p>
+						</div>
+				</div>
+				<else/>
+						<div style="font-size:16px;margin-top: 100px;">{$errormsg}</div>
+				</if>
+				</div>
+				<!-- =============结果====================== -->
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	$("#scm").click(function(){
+		$("#scc").removeClass('show');
+		$("#scc li").click(function(){
+			var sc = $(this).html()
+			$("#scm").val(sc);
+			$("#scc").addClass('show');
+		})
+	})
+	$("#dd").click(function(){
+		if($("#dadui").hasClass('show'))
+		{
+			$("#dadui").removeClass('show');
+		}
+		else
+
+		{
+			$("#dadui").addClass('show');
+		}
+
+		$("#dadui li").click(function(){
+			var ht = $(this).html() ;
+			$("#dd").val(ht);
+			$('#zhongdui').css('height',0);
+			$("#dadui").addClass('show');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : ht,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSZD']+'">'+data[i]['SSZD']+'</li>'
+					};
+					$('#zhongdui').css('height',200);
+					$('#zhongdui').css('border','1px solid #41C3D6');
+					$('#zhongdui').css('display','none');
+					$('#zhongdui').html(str);
+					$('#zd').val('--请选择--');
+					$('#cz').val('--请选择--');
+
+					
+					 console.log(data);
+				}
+			});
+		})
+	})
+	$("#zd").click(function(){
+		$('#zhongdui').css('display','block');
+		/*if($("#zhongdui").hasClass('show'))
+		{
+			$("#zhongdui").removeClass('show');
+		}
+		else
+
+		{
+			$("#zhongdui").addClass('show');
+		}*/
+		$("#zhongdui li").click(function(){
+			var sszd = $(this).html() ;
+			$("#zd").val(sszd);
+			var zfdwmc = $("#dd").val();
+			//$("#zhongdui").addClass('show');
+			$('#zhongdui').css('display','none');
+			$("#zhongdui").removeClass('show');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : zfdwmc,
+					sszd : sszd,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSCZ']+'">'+data[i]['SSCZ']+'</li>'
+					};
+					$('#chezu').css('height',200);
+					$('#chezu').css('border','1px solid #41C3D6');
+					$('#chezu').css('display','none');
+					$('#chezu').html(str);
+					$('#cz').val('--请选择--');
+
+					
+					 console.log(data);
+				}
+			});
+		})
+	});
+	$("#cz").click(function(){
+
+		/*if($("#chezu").hasClass('show'))
+		{
+			$("#chezu").removeClass('show');
+		}
+		else
+
+		{
+			$("#chezu").addClass('show');
+		}*/
+		$('#chezu').css('display','block');
+		$("#chezu li").click(function(){
+			
+			var cz = $(this).html() ;
+			$("#cz").val(cz);
+			$('#chezu').css('display','none');
+		})
+	})
+	$("#qx").click(function(){
+		if($("#role").hasClass('show'))
+		{
+			$("#role").removeClass('show');
+		}
+		else
+		{
+			$("#role").addClass('show');
+		}
+
+		$("#role li").click(function(){
+			var ht = $(this).children('span').html() ;
+			var ht1 = $(this).children('p').html() ;
+			$("#qx1").val(ht1);
+			$("#qx").val(ht);
+			$("#role").addClass('show');
+		})
+	})
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+
+
+	$("#button").click(function(){
+		var name = $.trim($("#name").val());
+		var zfzh = $.trim($("#zfzh").val());
+		var dd = $.trim($("#dd").val());
+		var qx1 = $("#qx1").val()
+		if(dd == '--请选择--'&& zfzh=='' && name=='')
+		{
+			layer.alert('请输入相对应的内容', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+		}
+		else if(qx1 == '')
+		{
+			layer.alert('请选择权限', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+		}
+		else
+		{
+			$("form").submit();
+		}
+
+	})
+
+	function check(){
+		var driverName = $("#name").val();//姓名
+			var cyzg = $("#zfzh").val();//从业资格证
+			//var qx1 = $("#qx1").val();//权限级别
+			var driverNameReg = /^[\u4E00-\u9FA5]{1,6}$/;
+			var cyzgReg = /^\w+$/;
+
+			/*if(qx1 == ''){
+				layer.alert('权限级别不能为空', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+				return false;
+			}*/
+		
+			if(driverName != ''){
+				if (!driverNameReg.test(driverName)) {
+					layer.alert('请填写正确的姓名', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+
+			if(cyzg != ''){
+				if (!cyzgReg.test(cyzg)) {
+					layer.alert('请填写正确执法证号', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+	}
+
+</script>
+
+<script type="text/javascript">
+	$(function(){
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height-150);
+	})
+</script>

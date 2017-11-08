@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+
+    <title>出租汽车稽查系统</title>
+
+    <style type="text/css">
+
+        .info{
+
+            width: 600px;
+
+            margin:20px auto;
+
+        }
+
+        .info tr{
+
+
+
+            height: 35px;
+
+        }
+
+        .td-left{
+
+            border-right: 1px solid #CDCDCD;
+
+        }
+
+        .font-tr{
+
+            width: 300px;
+
+        }
+
+        .sub-title{
+
+            text-indent: 22px;
+
+            color: #fff;
+
+            background-color: #41C3D6;
+
+        }
+
+        input[type="text"]{
+
+            width: 99%;
+
+            height: 100%;
+
+        }
+
+        .laydate-icon.input{
+
+            height: 27px;
+
+            width: 280px;
+
+            line-height: 27px;
+
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    <div class="center">
+        <div class="info">
+            <table border="1" cellspacing="0" cellpadding="">
+                <tr>
+                    <td align="left" colspan="2" class="sub-title">
+                        角色功能
+                    </td>
+                </tr>
+
+                <tr class="color">
+                    <td align="center" class="font-tr td-left" >功能：</td>
+                    <td align="center" class="font-tr" >
+                        <div class="select_checkBox" style="width: 100%">
+                            <div class="chartOptionsFlowTrend" style="text-align: left">
+                                <volist name="Rz" id="v">
+                                    <if condition="in_array($v['ID'],$R2)"> <span>{$v.NAME}</span><br /></if>
+                                    
+                                </volist>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script src="__JS__/jedate.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__JS__/layer/layer.js"></script>
+
+		<script type="text/javascript" src="http://cdn.webfont.youziku.com/wwwroot/js/wf/youziku.api.min.js"></script>
+	
+		
+	</head>
+
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+	<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="{:U('Message/message_ac')}"><dt id="user" class="dldt " style="width: 300px; margin:0px; font-size: 20px;  font-family: '微软雅黑';">道路运输执法记录查询</dt></a>
+					<a href="#"><dt id="sim" class="dldt  border" style="width: 300px; margin:0px; font-size: 20px; font-family: '微软雅黑';">道路运输违法数量查询</dt>	</a>
+					<a href="{:U('Message/getMessageComplain')}"><dt id="fal" class="dldt" style="width: 300px; margin:0px; font-size: 20px; font-family: '微软雅黑';">道路运输 投诉记录查询</dt>	</a>
+				</dl>
+			</div>
+
+				<div class="center_right">
+					<form action="{:U('Message/getMessageFalseEnd')}" method="post" onsubmit="return checkbox();">
+				<div class="sim_1">								
+				<select name="hylb" id="hylb" style="font-family: '微软雅黑';font-size: 18px;">
+					<option value="旅游车" style="font-family: '微软雅黑';font-size: 18px;">旅游客车</option>
+					<option value="客运及客运站经营" style="font-family: '微软雅黑';font-size: 18px;">客运汽车</option>
+					<option value="货运及货运站经营" style="font-family: '微软雅黑';font-size: 18px;">货运汽车</option>
+					<option value="" style="font-family: '微软雅黑';font-size: 18px;">租赁汽车</option>
+				</select>
+				</div>
+				
+				<div class="title_1" style="top: 247px; font-family: '微软雅黑';font-size: 16px;">
+					检索项
+				</div>
+
+					
+					
+			
+				<div class="search_from" style="margin-top: 40px; height: 165px; width: 1140px;">
+					<dl>						
+						<dd style="font-family: '微软雅黑';font-size: 16px;">
+							车牌号码<input type="text" style="height: 25px; width: 158px;margin-right: 92px" class="input" name="vname" id="vname" value="" />
+						</dd>
+						<dd style="font-family: '微软雅黑';font-size: 16px;">
+							当&nbsp;&nbsp;事&nbsp;&nbsp;人<input type="text" style="height: 25px; width: 158px;" class="input" name="danshiren" id="person" value="" />
+						</dd>
+						<dd style="font-family: '微软雅黑';font-size: 16px;">
+							从业资格证号<input type="text" style="height: 25px; width: 158px;" class="input" name="jdkh" id="jdkh" value="" />
+						</dd>
+						
+						<dd style="font-family: '微软雅黑';font-size: 16px;">
+							公司名称<input type="text" style="height: 25px; width: 158px;margin-right: 95px;" class="input" name="cropName" id="cropName" value="" />
+						</dd>
+						
+						<dd style="font-family: '微软雅黑';font-size: 16px;">起始时间<input class="input" name="checkTime" style="height: 25px; width: 158px; margin-right: 112px;" id="dateinfo" type="text" placeholder="请选择"  readonly>
+						</dd>
+						<dd style="font-family: '微软雅黑'; font-size: 16px;">结束时间<input class="input" name="endTime" style="height: 25px; width: 158px;" id="dateinfo1" type="text" placeholder="请选择"  readonly>
+						</dd>						
+					</dl>				
+				</div>
+				<div class="submit">			
+					<input type="submit" name="" id="" value="查询" />                           
+				</div>
+
+				</form>
+					</div>
+			</div>
+
+		
+	</body>
+</html>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+</script>
+<script type="text/javascript">
+//jeDate.skin('gray');
+
+    jeDate({
+		dateCell:"#dateinfo",
+		format:"YYYY-MM-DD hh:mm:ss",
+		isinitVal:true,
+		isTime:true, //isClear:false,
+		minDate:"2014-09-19 00:00:00",
+
+	})
+     jeDate({
+		dateCell:"#dateinfo1",
+		format:"YYYY-MM-DD hh:mm:ss",
+		isinitVal:true,
+		isTime:true, //isClear:false,
+		minDate:"2014-09-19 00:00:00",
+	
+	})
+</script>
+<script type="text/javascript">
+	function checkbox(){
+		var checkTime = $("#dateinfo").val();
+		var endTime   = $("#dateinfo1").val();
+		var  person   = $("#person").val();
+		var vname     = $("#vname").val();
+		if(checkTime>=endTime)
+		{
+			layer.alert('起始时间不能大于结束时间', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		if($.trim(person)=='' )
+		{
+			layer.alert('请填写当事人', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		if($.trim(vname)=='' )
+		{
+			layer.alert('请填写车牌号', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+
+	}
+</script>
+

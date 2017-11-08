@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>出租汽车稽查系统</title>
+		<script src="__JS__/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<script src="__JS__/layer/layer.js"></script>
+<style type="text/css">
+.info{
+	width: 600px;
+	margin:20px auto;
+}
+.info tr{
+
+	height: 35px;
+}
+.td-left{
+	border-right: 1px solid #CDCDCD;
+}
+.font-tr{
+	width: 300px;
+}
+.sub-title{
+	text-indent: 22px;
+	color: #fff;
+	background-color: #41C3D6;
+}
+ input[type="password"]{
+	width: 99%;
+    height: 100%;
+}
+.laydate-icon.input{
+	height: 27px;
+    width: 280px;
+    line-height: 27px;
+}
+</style>
+	</head>
+	<body>
+		<form id="form1" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="zfzd" value="{$zfzd}" />
+		<div class="center">
+				<div class="info">
+					
+					<table border="1" cellspacing="0" cellpadding="">
+					<tr>
+						<td align="left" colspan="2" class="sub-title">
+								修改密码
+						</td>
+					</tr>
+
+					<!--<tr class="color">
+						<td align="center" class="font-tr td-left" >原始密码：</td>
+						<td align="center" class="font-tr" >
+							<input type="password" name="old_pwd" id="old_pwd" value="" />
+						</td>
+					</tr>-->
+
+					<tr>
+						<td align="center" class="font-tr td-left" >新密码：</td>
+						<td align="center" class="font-tr" >
+							<input type="password" name="new_pwd" id="new_pwd" value="" />
+						</td>
+					</tr>
+					<tr class="color">
+						<td align="center" class="font-tr td-left" >确认密码：</td>
+						<td align="center" class="font-tr" >
+							<input type="password" name="sure" id="sure" value="" />
+						</td>
+					</tr>
+					
+				</table>
+
+		</div>
+	</div>
+	</form>
+
+	<script type="text/javascript">
+			function submit(_page,jq){
+				$('#form1').form('submit',{
+					url:"__APP__/Home/Admin/ajaxReSetPwd",
+					onSubmit: function(){
+						var old = $("#old_pwd").val();
+						var new_pwd = $("#new_pwd").val();
+						var sure = $("#sure").val();
+                        var reg = /^(?![a-zA-Z0-9]+$)(?![^a-zA-Z/D]+$)(?![^0-9/D]+$).{1,16}$/;
+                        var len=reg.test(new_pwd);
+                        if(!len){
+                            alert("密码强度不符合,请重新输入");
+                            return false;
+                        }
+
+						if($.trim(new_pwd) == ''){
+							layer.alert('请输入新密码', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} );
+							return false;
+						}
+                        if($.trim(sure) == ''){
+							layer.alert('请输入确认密码', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} );
+							return false;
+						}
+                        if(sure != new_pwd){
+                            layer.alert('两次新密码不一致', {
+                                skin: 'layui-layer-molv' //样式类名
+                                ,closeBtn: 0
+                            } );
+                            return false;
+                        }
+
+                        var isValid = $('#form1').form('validate');
+						return isValid;
+					},
+				    success: function(data){
+				    		_page.closeWin();
+					    	eval("var json ="+data);
+					    	//console.log(json);
+					    	if(json.error == 0){
+								parent.window.showDiv('恭喜！'+json.msg,1);
+					    		//_page.destroyWin();
+					    	}else{
+								parent.window.showDiv('错误！'+json.msg,2);
+					    	}
+			    		}
+				});
+			}
+		</script>
+		
+	</body>
+</html>
+

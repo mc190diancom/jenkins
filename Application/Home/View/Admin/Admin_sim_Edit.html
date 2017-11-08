@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<script src="__JS__/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<script src="__JS__/layer/layer.js"></script>
+<style type="text/css">
+.info{
+	width: 600px;
+	margin:20px auto;
+}
+.info tr{
+
+	height: 35px;
+}
+.td-left{
+	border-right: 1px solid #CDCDCD;
+}
+.font-tr{
+	width: 300px;
+}
+.sub-title{
+	text-indent: 22px;
+	color: #fff;
+	background-color: #41C3D6;
+}
+ input[type="text"]{
+	width: 99%;
+    height: 100%;
+}
+.laydate-icon.input{
+	height: 27px;
+    width: 280px;
+    line-height: 27px;
+}
+</style>
+	</head>
+	<body>
+
+		
+		<form id="form1" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="zfzh" value="{$zfzh}" />
+		<div class="center">
+				<div class="info">
+					
+					<table border="1" cellspacing="0" cellpadding="">
+					<tr>
+						<td align="left" colspan="2" class="sub-title">
+								SIM卡号修改
+						</td>
+					</tr>
+					<tr class="color">
+						<td align="center" class="font-tr td-left" >原始卡号：</td>
+						<td align="center" class="font-tr" >
+							<input type="text" name="old_sim" id="old_sim" value="" />
+						</td>
+					</tr>
+					<tr>
+						<td align="center" class="font-tr td-left" >新卡号：</td>
+						<td align="center" class="font-tr" >
+							<input type="text" name="n_sim" id="n_sim" value="" />
+						</td>
+					</tr>
+					<tr class="color">
+						<td align="center" class="font-tr td-left" >确认卡号：</td>
+						<td align="center" class="font-tr" >
+							<input type="text" name="sure" id="sure" value="" />
+						</td>
+					</tr>
+					
+				</table>
+
+		</div>
+	</div>
+	</form>
+
+
+		<script type="text/javascript">
+			function submit(_page,jq){
+				
+
+				$('#form1').form('submit',{
+					url:"__APP__/Home/Admin/ajaxUpdateSim",
+					onSubmit: function(){
+						var old_sim = $("#old_sim").val();
+						var n_sim = $("#n_sim").val();
+						var sure = $("#sure").val();
+						var zfzh = $("#zfzh").val();
+						if(zfzh == '')
+						{
+							layer.alert('选择错误', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} )
+							return false;
+						}
+						if($.trim(old_sim) == ''){
+							layer.alert('请输入原始的SIM卡号', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} )
+							return false;
+						}
+						if($.trim(n_sim) == ''){
+							layer.alert('请输入新的SIM卡号', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} )
+							return false;
+						}
+						if(n_sim != sure){
+							layer.alert('两次新卡号不一样', {
+								skin: 'layui-layer-molv' //样式类名
+								,closeBtn: 0
+							} )
+							return false;
+						}
+
+						var isValid = $('#form1').form('validate');
+						return isValid;
+					},
+				    success: function(data){
+					    	eval("var json ="+data);
+					    	//console.log(json);
+					    	if(json.err == 0){
+								parent.window.showDiv('恭喜！'+json.errorMsg,1);
+					    		_page.destroyWin();
+					    		_page.closeWin();
+					    	}else{
+					    		
+								parent.window.showDiv('错误！'+json.errorMsg,2);
+					    	}
+			    		}
+				});
+			}
+		</script>
+		
+	</body>
+</html>
+
+
+
+

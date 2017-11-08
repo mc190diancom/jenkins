@@ -1,0 +1,303 @@
+<!-- <link rel="stylesheet" type="text/css" href="__CSS__/swiper.min.css"/> -->
+<style type="text/css">
+.banner{
+    /*margin-right: 40px;*/
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+}
+/*.swiper-container{
+    left: 0px;
+    z-index: -1;
+}*/
+/*.swiper-slide img{
+    margin:0px;
+    height: 100px;
+    width: 100%;
+}*/
+.head .head_top .title{
+    color: #000;
+}
+.head_botton a{
+    color: white;
+    display: list-item;
+}
+.head_botton ul.nav-right{
+    float: right;
+    margin-right: 50px;
+    margin-top: -50px;
+}
+.head_botton ul.nav-right li{
+    float: left;
+    width: 10%;
+    min-width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    font-family: "黑体";
+    color: #ffffff;
+}
+#info{
+    position: absolute;
+    z-index: 9999;
+    margin-left: -15px;
+    height:100px;
+    width:160px;
+    background-color: #41C3D6;
+}
+#info li{
+    width: 100%;
+    line-height: 50px;
+    border-bottom: 1px solid #fff;
+}
+.logo-radius{
+    border-radius: 30px;
+    background: white;
+    margin: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background: white;
+}
+.logo-radius img{
+    margin-top: -20px;
+}
+</style>
+<div class="head">
+    <div class="head_top">
+        <div class="img"><img src="__IMG__/logo.png"/></div>
+
+        <div class="title">
+            道路运输行业现场稽查系统
+        </div>
+        
+        <div class="clear"></div>
+            
+    </div>
+
+    <!-- Swiper -->
+        <div class="banner">
+            <img class="header-banner" src="__IMG__/banner-header.png" style="width: 100%;
+    height: 100px;">
+            <!-- <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="__IMG__/aaaa.jpg"></div>
+                    <div class="swiper-slide"><img src="__IMG__/cccc.jpg"></div>
+                    <div class="swiper-slide"><img src="__IMG__/bbbb.jpg"></div>
+                    <div class="swiper-slide"><img src="__IMG__/dddd.jpg"></div>
+                    <div class="swiper-slide"><img src="__IMG__/eeee.jpg"></div>
+                </div>
+                 Add Pagination 
+                 <div class="swiper-pagination"></div> 
+            </div> -->
+        </div>
+
+
+    <div class="head_botton">
+
+        <ul class="nav-left">
+            <volist name="newMenu" id="v" key="k">
+                <li style="font-size:16px;" <if condition="$check eq $v['id']"> class="active"</if>><a href={$v.href}>{$v.name}</a></li>
+            </volist>
+
+        </ul>
+        <ul class="nav-right">
+            <li><div class="logo-radius"><img src="__IMG__/logo.png"/ width="25"></div></li>
+            <li style="width:150px;">
+                <div class="c-change">{$Think.session.admin.userName}<span class="change-img"><img src="__IMG__/down.png" width="20"/></span></div>
+                <ul id="info" style="display: none;">
+                    <li><a href="javascript:info('{$user_name}');">个人信息</a></li>
+                    <li><a href="javascript:change_pwd();">修改密码</a></li>
+                </ul>
+            </li>
+            <li><a href="{:U('Login/logout')}" style="color: white;">退出 </a></li>
+        </ul>
+        <!-- <dl id="change">
+            <dt class="header"><img src="__IMG__/logo.png"/></dt>
+            <dt class="name">{$Think.session.admin.userName}</dt>
+            <dt class="change"><img src="__IMG__/down.png"/></dt>
+            <dt class="logout"><a  style="color: white;"  href="{:U('Login/logout')}">退出 </a></dt>
+            
+
+        </dl> -->
+
+        <div class="clear"></div>
+    </div>
+    <!-- <div class="disshow style" id="info">
+        <dl>
+            <a href="javascript:info('{$user_name}');"><dt>个人信息</dt></a>
+            <a href="javascript:change_pwd();"><dt>修改密码</dt></a>
+            <a href="#"><dt>关于</dt></a>
+
+        </dl>
+    </div> -->
+</div>
+<script>
+    $(".header,.name,.c-change,#info").click(function(){
+        if($("#info").css('display')=='none'){
+            $("#info").show();
+            $(".change-img img").attr('src','__IMG__/top.png');
+        }else{
+            $("#info").hide();
+            $(".change-img img").attr('src','__IMG__/down.png');
+        }
+    })
+    
+</script>
+<!-- <script src="__JS__/swiper.min.js" type="text/javascript" charset="utf-8"></script> -->
+<script>
+    /*var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        slidesPerView: 1,
+        paginationClickable: true,
+        spaceBetween: 0,
+        autoplay: 2500,
+        loop: true
+    });*/
+</script>
+<script type="text/javascript">
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+</script>
+
+<script type="text/javascript">
+    
+    (function($) {
+        
+    $.extend({
+        myTime: {
+            /**
+             * 当前时间戳
+             * @return <int>        unix时间戳(秒)  
+             */
+            CurTime: function(){
+                return Date.parse(new Date())/1000;
+            },
+            /**              
+             * 日期 转换为 Unix时间戳
+             * @param <string> 2014-01-01 20:20:20  日期格式              
+             * @return <int>        unix时间戳(秒)              
+             */
+            DateToUnix: function(string) {
+                var f = string.split(' ', 2);
+                var d = (f[0] ? f[0] : '').split('-', 3);
+                var t = (f[1] ? f[1] : '').split(':', 3);
+                return (new Date(
+                        parseInt(d[0], 10) || null,
+                        (parseInt(d[1], 10) || 1) - 1,
+                        parseInt(d[2], 10) || null,
+                        parseInt(t[0], 10) || null,
+                        parseInt(t[1], 10) || null,
+                        parseInt(t[2], 10) || null
+                        )).getTime() / 1000;
+            },
+            /**              
+             * 时间戳转换日期              
+             * @param <int> unixTime    待时间戳(秒)              
+             * @param <bool> isFull    返回完整时间(Y-m-d 或者 Y-m-d H:i:s)              
+             * @param <int>  timeZone   时区              
+             */
+            UnixToDate: function(unixTime, isFull, timeZone) {
+                var timeZone = 8;
+                if (typeof (timeZone) == 'number')
+                {
+                    unixTime = parseInt(unixTime) + parseInt(timeZone) * 60 * 60;
+                }
+                var time = new Date(unixTime * 1000);
+                var ymdhis = "";
+                ymdhis += time.getUTCFullYear() + "-";
+                ymdhis += (time.getUTCMonth()+1) + "-";
+                ymdhis += time.getUTCDate();
+                if (isFull === true)
+                {
+                    ymdhis += " " + time.getUTCHours() + ":";
+                    ymdhis += time.getUTCMinutes() + ":";
+                    ymdhis += time.getUTCSeconds();
+                }
+                return ymdhis;
+            }
+        }
+    });
+})(jQuery);
+</script>
+<script type="text/javascript">
+    
+    function info(user_name) {
+            //console.log(user_name);
+            var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+            var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/Admin/pp_info?zfzh='+user_name+'"></iframe>');
+            winBody.append(ifr);
+            top.window.$('body').append(winBody);  
+            win=winBody.dialog({   
+                title: "个人信息",
+                width: 800,   
+                modal: true,   
+                shadow: false,   
+                closed: true,  
+                height: 400,
+                draggable:true,
+                maximizable:true,
+                inline:true,    
+                onDestroy:function(){   
+                    winBody.remove();
+                }
+            }).panel('move',{
+                top:200
+            });
+            win.window('open');
+            //alert('You click like icon, row: ' + JSON.stringify(row));
+            //console.log(value, row, index);
+        }
+         function change_pwd() {
+            
+            var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+            var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/Admin/change_pwd"></iframe>');
+            winBody.append(ifr);
+            top.window.$('body').append(winBody);  
+            win=winBody.dialog({   
+                title: "修改密码",
+                width: 800,   
+                modal: true,   
+                shadow: false,   
+                closed: true,  
+                height: 300,
+                draggable:true,
+                maximizable:true,
+                inline:true,    
+                onDestroy:function(){   
+                    winBody.remove();
+                },
+                buttons:[{
+                    text:'提交',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        ifr[0].contentWindow.submit(_page,$);
+                    }
+                }]
+            }).panel('move',{
+                top:200
+            });
+            win.window('open');
+            //alert('You click like icon, row: ' + JSON.stringify(row));
+            //console.log(value, row, index);
+        }
+</script>

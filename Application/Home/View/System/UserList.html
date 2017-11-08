@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+
+		<include file="Public:common" />
+		
+		<!--  -->
+
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+
+
+	</head>
+	<body>
+
+		<include file="Public:head" />
+
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<!-- <a href="{:U('Home/System/Organization')}"><dt id="user" class="dldt" >组织管理</dt></a> -->
+					<a href="{:U('Home/System/UserList')}"><dt id="123" class="dldt border">用户管理</dt></a>
+					<a href="{:U('Home/System/roleStyle')}"><dt class="dldt ">角色管理</dt></a>
+					<!-- <a href="{:U('Home/System/permissions')}"><dt class="dldt ">权限管理</dt></a>
+					<a href="{:U('Home/System/logList')}"><dt class="dldt ">日志管理</dt></a> -->
+					<a href="{:U('Home/System/AppNotice')}"><dt class="dldt ">APP公告维护</dt></a>
+					<a href="{:U('Home/System/checkMaintain')}"><dt class="dldt ">检查项维护</dt></a>
+					<a href="{:U('Home/System/mobileCameraMaintain')}"><dt class="dldt ">移动摄像头维护</dt></a>
+					<a href="{:U('Home/Admin/Admin_UserList')}"><dt class="dldt">用户管理</dt></a>
+				</dl>
+			</div>
+			<div class="center_right">
+				
+				<form action="##" method="post">	
+				<div class="title_1 c-title">检索项</div>
+
+				<div class="search_from msg-search" style="margin-top: 10px;height: 100%; width: 100%;">
+					<dl style="position: relative">
+						<dd>
+							<div class="left">账号</div>
+							<div class="right">
+								<input type="text" style="height:25px;" class="input" name="zfzh" id="zfzh" value="" />
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">姓名</div>
+							<div class="right">
+								<input type="text" style="height:25px;" class="input" name="name" id="name" value="" />
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">性别</div>
+							<div class="right">
+								<input type="text" readonly style="height: 25px;" class="input xxl" name="sex" id="sex" value="--请选择--" />
+								<ul class="dadui disshow" id="sexlist" >
+									<li>全部</li>
+									<li >男</li>
+									<li >女</li>
+									
+								</ul>
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">组织</div>
+							<div class="right">
+								<input type="text" readonly style="height: 25px;" class="input xxl" name="dd" id="dd" value="--请选择--" />
+								<ul class="dadui disshow" id="dadui"  style="width:96%;">
+									<li>全部</li>
+									<volist name="compName" id="v">
+										<li value="{$v.ZFDWMC}">{$v.ZFDWMC}</li>
+									</volist>
+								</ul>
+							</div>
+							<div class="clear"></div>
+						</dd>
+				
+					</dl>
+					<div class="clear"></div>
+				</div>
+				<div class="submit">			
+					<input type="button" name="" id="search_btn" value="查询" />                           
+				</div>
+				</form>
+
+				<!-- =============结果====================== -->
+				<div style="margin-top:80px;margin-bottom:110px;">
+						<div class="center_right_top table-responsive">
+							<span>查询结果</span>
+							<div class="Add">添加</div>
+							<div class="delAll">删除选择项</div>
+							<div class="clear"></div>
+						</div>
+						<div class="center_right_botton">
+							<input type="hidden" id="nums" name="" value="">
+							<!--startprint6-->
+							<table id="table" data-height="268" class="table table-striped table-bordered table-hover">
+							    <thead>
+							    <tr>
+							        <th data-field="state" data-checkbox="true"></th>
+							        <th data-field="ZFZH" data-align="center" data-sortable="true"><div style="width:60px">账号</div></th>
+							        <th data-field="NAME" data-align="center" data-sortable="true"><div style="width:150px">姓名</div></th>
+							        <th data-field="SEX" data-align="center" data-sortable="true"><div style="width:70px">性别</div></th>
+							        <th data-field="ZFDWMC" data-align="center" data-sortable="true"><div style="width:150px">组织</div></th>
+							        <th data-field="LASTLOGIN" data-align="center" data-sortable="true" data-formatter="FormatterSTime"><div style="width:150px">最后登陆日期</div></th>
+							        <th data-field="ZHZT" data-formatter="actionFormatter" data-align="center" data-events="actionEvents"><div style="width:100px">操作</div></th>
+							    </tr>
+							    </thead>
+							</table>
+							<!--endprint6-->
+						
+						</div>
+							
+						<!-- <div class="return">
+							<input type="submit" onclick="preview(6)" name="" id="" value="打印" /> 
+						</div> -->
+						<div class="return" style="margin-right: 15px">
+							<a href="javascript:ExportCsv();"><input type="submit" name="" id="" value="导出" /> </a>
+						</div>
+					</div>					
+				</div>
+				<!-- =============结果====================== -->
+				<div style="clear:both;"></div>
+		</div>
+		
+		
+	</body>
+</html>
+<script>
+	
+
+	$("#dd").click(function(){
+		if($("#dadui").hasClass('disshow'))
+		{
+			$("#dadui").removeClass('disshow');
+		}
+		else
+
+		{
+			$("#dadui").addClass('disshow');
+		}
+
+		$("#dadui li").click(function(){
+			var ht = $(this).html() ;
+			$("#dd").val(ht);
+			$('#zhongdui').css('height',0);
+			$("#dadui").addClass('disshow');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : ht,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '<li>全部</li>';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSZD']+'">'+data[i]['SSZD']+'</li>'
+					};
+					$('#zhongdui').css('height',200);
+					$('#zhongdui').css('display','none');
+					$('#zhongdui').html(str);
+
+					//$('#chezu').html(str);
+					$('#zd').val('--请选择--');
+					$('#cz').val('--请选择--');
+					
+					 //console.log(data);
+				}
+			});
+		})
+	})
+	$("#zd").click(function(){
+		$('#zhongdui').css('height','200px');
+		$('#zhongdui').css('display','block');
+		
+		$("#zhongdui li").click(function(){
+			var sszd = $(this).html() ;
+			$('#zhongdui').css('height',0);
+			$('#zhongdui').css('display','none');
+			$("#zd").val(sszd);
+			var zfdwmc = $("#dd").val();
+			//$("#zhongdui").addClass('disshow');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Admin/getGroups',
+				data : {
+					zfdwmc : zfdwmc,
+					sszd : sszd,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '<li>全部</li>';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['SSCZ']+'">'+data[i]['SSCZ']+'</li>'
+					};
+					$('#chezu').css('height',200);
+					$('#chezu').css('border','1px solid #41C3D6');
+					$('#chezu').css('display','none');
+					$('#chezu').html(str);
+					$('#cz').val('--请选择--');
+
+					
+					 //console.log(data);
+				}
+			});
+		})
+	});
+	$("#cz").click(function(){
+		$('#chezu').css('height','200px');
+		$('#chezu').css('display','block');
+		
+		$("#chezu li").click(function(){
+			$('#chezu').css('display','none');
+			$('#chezu').css('height',0);
+			var cz = $(this).html() ;
+			$("#cz").val(cz);
+			$("#chezu").removeClass('disshow');
+		})
+	});
+	$("#sex").click(function(){
+		/*if($("#sexlist").hasClass('disshow'))
+		{
+			$("#sexlist").removeClass('disshow');
+			$('#sexlist').css('display','block');
+			$('#sexlist').css('height','200px');
+
+		}else{
+			$('#sexlist').css('display','none');
+			$('#sexlist').css('height','0px');
+			$("#sexlist").addClass('disshow');
+		}*/
+		if($("#sexlist").css('display')=='none'){
+			$("#sexlist").css('display','block');
+			$('#sexlist').css('height','200px');
+		}else{
+			$("#sexlist").css('display','none');
+			$('#sexlist').css('height','0');
+		}
+		
+		//$('#sexlist').css('display','block');
+		
+		$("#sexlist li").click(function(){
+			$('#sexlist').css('display','none');
+			$('#sexlist').css('height',0);
+			var sex = $(this).html() ;
+			$("#sex").val(sex);
+			$("#sexlist").removeClass('disshow');
+		})
+	});
+	$("#hy").click(function(){
+		if($("#hangye").hasClass('disshow'))
+		{
+			$("#hangye").removeClass('disshow');
+		}
+		else
+
+		{
+			$("#hangye").addClass('disshow');
+		}
+		$("#hangye li").click(function(){
+			var ht = $(this).html() ;
+			$("#hy").val(ht);
+			$("#hangye").addClass('disshow');
+		})
+	})
+</script>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('disshow'))
+		{
+			$("#info").removeClass('disshow');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('disshow');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('disshow');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('disshow');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+	
+</script>
+
+
+<script type="text/javascript">
+	//获得查询参数
+	function getParams(params){
+		var sex = $("#sex").val();
+		var name = $("#name").val();
+		var zfzh = $("#zfzh").val();
+		var dd = $("#dd").val();
+
+		var vNameReg = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+		var driverNameReg = /^[\u4E00-\u9FA5]{1,6}$/;
+		var corpNameReg = /^[\u4E00-\u9FA5]{0,}$/;
+		var cyzgReg = /^\w+$/;
+		if(dd=='--请选择--'){
+			dd = '';
+		}
+		if(sex=='--请选择--'){
+			sex = '';
+		}
+
+		if(zfzh != ''){
+			if (!cyzgReg.test(zfzh)) {
+				layer.alert('请填写正确的账号', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} )
+				return false;
+			}
+		}
+
+		if(name != ''){
+			if (!driverNameReg.test(name)) {
+				layer.alert('请填写正确的姓名', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} )
+				return false;
+			}
+		}
+	
+		
+
+		var temp  = {
+				limit: params.limit,   //页面大小
+            	offset: params.offset,  //页码
+            	maxrows: params.limit,
+            	pageindex:params.pageNumber,
+				sex:sex,
+				name:name,
+				zfzh:zfzh,
+				dd:dd,
+		};
+		return temp;
+	}
+		//重新装载数据
+	function loadData(){
+		$('#table').bootstrapTable('refresh');
+
+	}
+	//导出
+	function ExportCsv(){
+		var sex = $("#sex").val();
+		var name = $("#name").val();
+		var zfzh = $("#zfzh").val();
+		var dd = $("#dd").val();
+		if(dd=='--请选择--'){
+			dd = '';
+		}
+		if(sex=='--请选择--'){
+			sex = '';
+		}
+		var temp  = {
+				sex:sex,
+				name:name,
+				zfzh:zfzh,
+				dd:dd,
+				offset: 0,  //页码
+            	maxrows: 1,
+		};
+		$.getJSON("__APP__/Home/System/ajaxUserList",temp,function(json){
+		    		console.log(json);
+		    if(json.total==0){
+				layer.msg('数据为空,不能导出', {icon: 2});
+			}else if(json.total > 10000){
+				layer.msg('一次导出数据不能超过1万条，请修改查询条件', {icon: 2});
+			}else{
+				//alert(json.total);
+				window.location.href = "__APP__/Home/ExportCsv/UserAllList?sex="+sex+"&name="+name+"&zfzh="+zfzh+"&dd="+dd;
+			}
+		});
+
+	}
+	$(function () {
+		/****/
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height+150);
+
+		$('#table').bootstrapTable({
+	        url: '__APP__/Home/System/ajaxUserList',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: getParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行   
+            height: 460,                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            formatLoadingMessage: function () {
+			    return "请稍等，正在加载中...";
+			  },
+			formatNoMatches: function () {  //没有匹配的结果
+			    return '无符合条件的记录';
+			},
+            onLoadError: function (data) {
+			    console.log(data);
+			 },  
+            onLoadSuccess: function(){  //加载成功时执行  
+       //      	$('#table').find('input[name="btSelectItem"]').each(function(){
+			    // 	var value = $(this).attr('data-index');
+			    // 	alert(value);
+			    // })
+              //layer.msg("加载成功"); 
+              $('input[name="btSelectAll"],input[name="btSelectItem"]').click(function(){
+			    	var str = '';
+			    	var newstr = '';
+			    	$('#nums').val('');
+			    	$("tr.selected").each(function(e){
+			    		
+			    		str = $(this).children('td').eq(1).html();
+			    		if(str&&str!='-'){
+			    			newstr += str+',';
+			    		}
+			    		
+			    	});
+			    	newstr = newstr.substring(0,newstr.length-1);
+			    	$('#nums').val(newstr);
+			    }); 
+            },
+			onClickRow: function (row) {
+				console.log(row);
+				//alert(row.JCBH);
+				var str = '';
+				var newstr = '';
+				str = $('#nums').val();
+				//alert(row.state);
+				if(row.state == false || row.state == undefined){
+					str = $('#nums').val();
+					if(row.ZFZH){
+						if(str){
+							newstr = row.ZFZH+','+str+',';
+						}else{
+							newstr = row.ZFZH+','
+						}
+					}else{
+						newstr = str+',';
+					}
+					
+					
+					//alert(newstr.substring(0,newstr.length-1));
+					newstr = newstr.substring(0,newstr.length-1);
+					//alert(newstr);
+					
+					
+					//newstr = newstr.substring(0,newstr.Length-1);
+				}else{
+					var s = str.split(',');
+
+					for(var i = 0;i<s.length;i++){
+						
+						if(s[i] == row.ZFZH){
+							
+							//alert(row.JCBH);
+						}else{
+							newstr += s[i]+',';
+							//alert(newstr);
+						}
+						
+					}
+					newstr = newstr.substring(0,newstr.length-1);
+				}
+				
+				
+				$('#nums').val(newstr);
+				/*if(row.state){
+					//var str = '1122,33445,566';
+
+				}*/
+			    //window.location.href = "/qStock/qProInfo/" + row.ProductId;
+			 },
+	    });
+
+	    $('#search_btn').bind('click',function(){
+			loadData();
+		});    
+
+		$('.Add').bind('click',function(){
+			var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+			var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/System/addUser"></iframe>');
+			winBody.append(ifr);
+			top.window.$('body').append(winBody);  
+		    win=winBody.dialog({   
+				title: "添加用户",
+				width: 700,   
+				modal: true,   
+				shadow: false,   
+				closed: true,  
+				height: 500,
+				draggable:true,
+				maximizable:true,
+				inline:true,    
+				onDestroy:function(){   
+					winBody.remove();
+				},
+				buttons:[{
+					text:'提交',
+					iconCls:'icon-ok',
+					handler:function(){
+						ifr[0].contentWindow.submit(_page,$);
+					}
+				}]
+			}).panel('move',{
+			    top:200
+			});
+			win.window('open');
+		});
+		$('.delAll').bind('click',function(){
+	    	nums = $('#nums').val();
+	    	if(nums==''){
+	    		layer.alert('请选择删除项', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} )
+				return false;
+	    	}
+	    	layer.confirm('确定删除麽', {
+			   btn: ['确定', '取消'] //按钮
+			},function(){
+				//nums = $('#nums').val();
+				$.getJSON("__APP__/Home/System/delUser",{"id":nums},function(json){
+		    		console.log(json);
+					if(json.error == 0){
+						loadData();
+						layer.msg(json.msg, {icon: 1});
+					}else{
+						layer.msg(json.msg, {icon: 2});
+					}
+				});
+			},function(){
+				layer.msg('取消删除', {icon: 1});
+			});
+	    	
+	    })
+	    
+	});
+
+</script>
+
+<script type="text/javascript">
+
+	var _page = self; //当前页面
+	var win = null; //弹出窗口
+	////弹出窗口回调函数
+	function closeWin(){
+		if(win!=null){
+			win.window('close');
+		}
+	}
+	function openWin(){
+		if(win!=null){
+			win.window('open');
+		}
+	}
+	function destroyWin(){
+		if(win!=null){
+			win.window('destroy');
+		}
+	}
+
+	function actionFormatter(value, row, index) {
+		console.log(value);
+		if(value==1){
+			var val = '禁用';
+		}else{
+			var val = '<span style="color:orange;">启用</span>';
+		}
+	    return [
+	        '<a class="edit" href="javascript:void(0)" title="修改">',
+	        '修改',
+	        '</a>',
+	        '<a class="tochange ml10" href="javascript:void(0)">',
+	        val,
+	        '</a>',
+	        '<a class="remove ml10" href="javascript:void(0)" title="删除">',
+	        '删除',
+	        '</a>'
+	    ].join('');
+	}
+	//时间换算
+	function FormatterSTime(value, row, index){
+		var val = $.myTime.UnixToDate(value/1000,true);
+		return [
+	        val
+	    ].join('');
+	}
+
+	window.actionEvents = {
+	    'click .edit': function (e, value, row, index) {
+	    	
+	    	eval("var param="+JSON.stringify(row));
+	    	console.log(param);
+	    	var winBody = $('<div style="overflow: hidden;" closed="true"></div>');
+			var ifr =$('<iframe width="100%" height="100%" frameborder="0" src="__APP__/Home/System/editUser?zfzh='+param.ZFZH+'"></iframe>');
+			winBody.append(ifr);
+			top.window.$('body').append(winBody);  
+		    win=winBody.dialog({   
+				title: "用户修改",
+				width: 800,   
+				modal: true,   
+				shadow: false,   
+				closed: true,  
+				height: 600,
+				draggable:true,
+				maximizable:true,
+				inline:true,    
+				onDestroy:function(){   
+					winBody.remove();
+				},
+				buttons:[{
+					text:'提交',
+					iconCls:'icon-ok',
+					handler:function(){
+						ifr[0].contentWindow.submit(_page,$);
+					}
+				}]
+			}).panel('move',{
+			    top:200
+			});
+			win.window('open');
+	        //alert('You click like icon, row: ' + JSON.stringify(row));
+	        //console.log(value, row, index);
+	    },
+	    'click .tochange': function (e, value, row, index) {
+	        //alert('You click edit icon, row: ' + JSON.stringify(row));
+	        //console.log(value, row, index);
+	        eval("var param="+JSON.stringify(row));
+	        /*{"id":"1111112,0000000","Status":"1"}*/
+	    	//console.log(param);
+	    	layer.confirm('确定要'+(param.ZHZT=='1'?'禁用':'启用')+'该账号?', {icon: 3, title:'提示'}, function(index){
+				  $.getJSON("__APP__/Home/System/changeUserStatus",{"id":param.ZFZH,'Status':param.ZHZT==1?2:1},function(json){
+		    		console.log(json);
+					if(json.error == 0){
+						loadData();
+						layer.msg(json.msg, {icon: 1});
+					}else{
+						layer.msg(json.msg, {icon: 2});
+					}
+				});
+			  
+			  layer.close(index);
+			});
+			
+	    },
+	    'click .remove': function (e, value, row, index) {
+	    	eval("var param="+JSON.stringify(row));
+	    	//console.log(param);
+	    	layer.confirm('确定要删除该账号?', {icon: 3, title:'提示'}, function(index){
+				  $.getJSON("__APP__/Home/System/delUser",{"id":param.ZFZH},function(json){
+		    		console.log(json);
+					if(json.error == 0){
+						loadData();
+						layer.msg(json.msg, {icon: 1});
+					}else{
+						layer.msg(json.msg, {icon: 2});
+					}
+				});
+			  
+			  layer.close(index);
+			});
+	        //alert('You click remove icon, row: ' + JSON.stringify(row));
+	        //console.log(value, row, index);
+	    }
+	};
+
+
+
+	//提示
+	function showDiv(msgs,status){
+		/*layer.alert(msg, {
+			skin: 'layui-layer-molv' //样式类名
+			,closeBtn: status
+		});*/
+		if(status==1){
+			loadData();
+		}
+		layer.msg(msgs, {icon: status});
+	}
+</script>
+
+
+

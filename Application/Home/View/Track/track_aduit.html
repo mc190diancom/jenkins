@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+
+		<meta name="layout" content="main">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+		<title>道路运输行业现场稽查系统</title>
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=e8PNl3bInqrm8d3iOrsk6NKR"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<!--  -->
+		
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+		<script src="__JS__/chuan/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+		
+
+	
+		
+	</head>
+	<body>
+		
+		<include file="Public:head" />
+		
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="{:U('Track/track')}"><dt id="user" class="dldt" >执法车辆定位</dt></a>
+					<a href="{:U('Track/track_aduit')}"><dt class="dldt border" >执法车辆轨迹定位</dt></a>
+				</dl>
+			</div>
+			<div class="center_right">
+				
+				<form action="##" method="post">	
+				<div class="title_1 c-title">检索项</div>
+					
+					
+			
+				<div class="search_from msg-search" style="margin-top: 10px;height: 100%; width: 100%;">
+					<dl style="position: relative">
+
+						<dd>
+							<div class="left">起始时间</div>
+							<div class="right">
+								<input placeholder="请输入日期" name="startTime" class="easyui-datetimebox" style="height: 25px;width: 100%;position: relative;border: 1px solid #41C3D6;border-radius: 0;" id="demo" value="{$startDate}">
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">结束时间</div>
+							<div class="right">
+								<input placeholder="请输入日期" name="endTime" class="easyui-datetimebox" style="height: 25px;width: 100%;position: relative;border: 1px solid #41C3D6;border-radius: 0;" id="demo1" value="{$endDate}">
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd>
+							<div class="left">执法车号</div>
+							<div class="right">
+								<input type="text" style="height: 25px;" class="input" name="carNum" id="carNum" value="" />
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<div class="submit">			
+							<input type="button" name="" id="search" value="查询" />               
+						</div>
+						<div class="clear"></div>
+					</dl>
+					<div class="clear"></div>
+				</div>
+				<!-- <div class="submit">			
+					<input type="button" name="" style="cursor: pointer" id="search" value="查询" />
+				</div> -->
+				</form>
+
+				<div id="myprint">
+					<style type="text/css">
+						* {
+						    -webkit-box-sizing: inherit;
+						    -moz-box-sizing: inherit;
+						    box-sizing: inherit;
+						}
+						label {
+						    max-width: 160px;
+						}
+						.menu_list{width:100%;height: 630px;margin:0 auto;overflow: auto;overflow-x: hidden;border-radius: 10px;}
+						.menu_head{
+							height: 40px;
+							line-height: 40px;
+							padding-left: 38px;
+							font-size: 12px;
+							color: #525252;
+							cursor: pointer;
+							border-bottom: 1px solid #e1e1e1;
+							border-top: 1px solid #F1F1F1;
+							position: relative;
+							margin: 0px;
+							font-weight: 500;
+							background-color: whitesmoke;
+							/*background: #f1f1f1 url(images/pro_left.png) center right no-repeat;*/
+						}
+						.menu_head:hover{
+							background-color: #41C3D6;
+							color:white;
+						}
+						.menu_list .current{background-color:#41C3D6;color:white;/*background:#f1f1f1 url(images/pro_down.png) center right no-repeat;*/}
+						.menu_body{
+							line-height: 38px;
+							border-left: 1px solid #e1e1e1;
+							backguound: #fff;
+							border-right: 1px solid #e1e1e1;
+							
+						}
+						.menu_body a{display:block;height:38px;line-height:38px;padding-left:38px;font-size: 12px;color:#333;background:#999999;text-decoration:none;border-bottom:1px solid #e1e1e1;}
+						.menu_body a:hover{text-decoration:none;background-color: #ccc;}
+					</style>
+					<!--startprint6-->
+					<div id="allmap" class="map" style="width: 73%; margin-top: 30px" ></div>
+					<!--endprint6-->
+
+
+					<div class="li" style="width: 25%;border-radius:10px; background: whitesmoke; height: 630px; float: right; margin-top: 30px">
+						<div id="firstpane" class="menu_list">
+							<volist name="R" id="v">
+								<h3 class="menu_head">{$v.sgname}<sapn style="float: right; margin-right: 20px ">{$v.count}</sapn></h3>
+								<div style="display:none;" class="menu_body">
+									<volist name="v.vnameList" id="val">
+										<a href="javascript:void(0);">{$val}</a>
+									</volist>
+								</div>
+							</volist>
+						</div>
+					</div>
+
+					<div class="clear"></div>
+				</div>
+				<div class="bootn">
+				
+		
+			<!-- <div class="b_submit">
+				导出数据
+			</div> -->
+			<div onclick="preview(6)" class="b_submit">
+				打印
+			</div>
+
+				</div>
+			</div>
+			<div class="clear">
+				
+			</div>
+		</div>
+		
+		
+	</body>
+</html>
+<script type="text/javascript">
+	$("#dd").click(function(){
+		if($("#dadui").hasClass('show'))
+		{
+			$("#dadui").removeClass('show');
+		}
+		else
+
+		{
+			$("#dadui").addClass('show');
+		}
+
+		$("#dadui li").click(function(){
+			var ht = $(this).html() ;
+			$("#dd").val(ht);
+			$("#dadui").addClass('show');
+			$.ajax({
+				type : 'POST',
+				url : '__APP__/Home/Common/ajaxGetZhongdui',
+				data : {
+					ht : ht,
+				},
+				dataType : 'json',
+				timeout : 3000,
+				success : function(data) {
+					var str = '';
+					for (var i = 0; i < data.length; i++) {
+						str += '<li value="'+data[i]['NAME']+'">'+data[i]['NAME']+'</li>'
+					};
+					$('#zhongdui').css('height',200);
+					$('#zhongdui').css('border','1px solid #41C3D6');
+					$('#zhongdui').html(str);
+					//console.log(data);
+				}
+			});
+		})
+	})
+	$("#zd").click(function(){
+		if($("#zhongdui").hasClass('show'))
+		{
+			$("#zhongdui").removeClass('show');
+		}
+		else
+
+		{
+			$("#zhongdui").addClass('show');
+		}
+		$("#zhongdui li").click(function(){
+			var ht = $(this).html() ;
+			$("#zd").val(ht);
+			$("#zhongdui").addClass('show');
+		})
+	});
+	function preview(oper)
+	{
+
+		/*bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+		sprnstr="<!--startprint6-->";//设置打印开始区域
+		eprnstr="<!--endprint6-->";//设置打印结束区域
+		prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+		prnhtmlprnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+		window.document.body.innerHTML=prnhtmlprnhtml;
+		window.print();
+		window.document.body.innerHTML=bdhtml;*/
+		$("div#myprint").printArea();
+
+	}
+</script>
+
+
+<script  type="text/javascript" >
+	$(document).ready( function(){
+		$(".example1").on("click", function(event) {
+
+			event.preventDefault();
+			html2canvas(document.getElementById("allmap"), {
+				allowTaint: true,
+				taintTest: false,
+				onrendered: function(canvas) {
+					canvas.id = "mycanvas";
+					//document.body.appendChild(canvas);
+					//生成base64图片数据
+					var img = new Image();
+					img.crossOrigin = "*";
+					var dataUrl = canvas.toDataURL();
+					var newImg = document.createElement("img");
+					newImg.src =  dataUrl;
+					document.body.appendChild(newImg);
+				}
+			});
+		});
+
+	});
+
+</script>
+<script type="text/javascript">
+	function getPoint(){
+
+	}
+</script>
+<script type="text/javascript">
+
+	var newPoints=[];
+	var bm = new BMap.Map("allmap");
+	bm.centerAndZoom(new BMap.Point(116.403875,39.915168), 13);
+	bm.enableScrollWheelZoom(true);
+
+		$("#search").click(function(){
+			newPoints=[];
+			bm.clearOverlays();
+			var startTime = $("input[name='startTime']").val();
+			var endTime = $("input[name='endTime']").val();
+			var carNum = $("#carNum").val();
+			if(startTime == ''|| endTime == ''){
+				layer.alert('开始时间和结束时间不能为空', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= endTime){
+				layer.alert('开始时间不能大于结束时间', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= (new Date()).Format("yyyy-MM-dd hh:mm:ss") || endTime > (new Date()).Format("yyyy-MM-dd hh:mm:ss")){
+					layer.alert('请填写有效时间', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if(($.myTime.DateToUnix(endTime)-$.myTime.DateToUnix(startTime))>60*60*24){
+				layer.alert('有效时间不超过24小时', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if($.trim(carNum) == '')
+			{
+				layer.alert('请填写执法车号', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+
+			
+			
+				var vNameReg = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+				if($.trim(carNum) != ''){
+					if (!vNameReg.test($.trim(carNum))) {
+						layer.alert('请填写正确的执法车号', {
+							skin: 'layui-layer-molv' //样式类名
+							,closeBtn: 0
+						} )
+						return false;
+					}
+				}
+				//layer.msg('百度地图正在规划轨迹,请稍等..');
+				var index = layer.load(0, {
+					shade: [0.5,'#fff'] //0.1透明度的白色背景
+				});
+				$.post("{:U('Track/ajaxGetLinePoint')}",{startTime:startTime,endTime:endTime,carNum:carNum},function(json){
+					bm.clearOverlays();
+					
+					layer.closeAll('loading');
+					if(json=='' || json==null)
+					{
+						layer.alert('没查到相关轨迹', {
+							skin: 'layui-layer-molv' //样式类名
+							,closeBtn: 0
+						} )
+						layer.closeAll("loading");
+					}
+					else
+					{
+						//layer.msg('百度地图正在规划轨迹,请稍等..');
+						
+						var points = [];
+						var vname = '';
+						$.each(json,function(k,v){
+							/*var p1 =  new BMap.Point(v.LON/100000, v.LAT/100000);
+							points.push(p1);
+							vname = v.VNAME;*/
+							var p1 =  new BMap.Point(v.lon/100000,v.lat/100000);
+							points.push(p1);
+							if(k == 0){
+								 p_start = new BMap.Point(v.lon/100000,v.lat/100000);
+							}
+							if(k === json.length-1){
+								p_end = new BMap.Point(v.lon/100000,v.lat/100000);
+							}
+						})
+					//轨迹居中自适应大小
+					//console.log(points);
+					setZoom(points);
+
+					//创建起点图标http://api0.map.bdimg.com/images/blank.gif
+					var startIcon = new BMap.Icon("__IMG__/qidian_hangye.png", new BMap.Size(26,34));
+					var marker2 = new BMap.Marker(p_start,{icon:startIcon});  // 创建标注
+					bm.addOverlay(marker2); 
+					var endIcon = new BMap.Icon("__IMG__/zhongdian_hangye.png", new BMap.Size(26,34));
+					var marker3 = new BMap.Marker(p_end,{icon:endIcon});  // 创建标注
+					bm.addOverlay(marker3); 
+					
+					var polyline = new BMap.Polyline(points, {strokeColor:"black", strokeWeight:5, strokeOpacity:0.5});   //创建折线
+					bm.addOverlay(polyline);   //增加折线
+					layer.closeAll("loading");
+
+						//change(points,vname)
+					}
+
+				},'json')
+			
+		})
+	$(".menu_body a").live('click',function(){
+		$(".menu_body a").css('background-color','#999999');
+		$(this).css('background-color','#ccc');
+		newPoints=[];
+		var startTime = $("input[name='startTime']").val();
+		var endTime = $("input[name='endTime']").val();
+		var carNum = $(this).html();
+		if(startTime == ''|| endTime == ''){
+				layer.alert('开始时间和结束时间不能为空', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= endTime){
+				layer.alert('开始时间不能大于结束时间', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= (new Date()).Format("yyyy-MM-dd hh:mm:ss") || endTime > (new Date()).Format("yyyy-MM-dd hh:mm:ss")){
+					layer.alert('请填写有效时间', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if(($.myTime.DateToUnix(endTime)-$.myTime.DateToUnix(startTime))>60*60*24){
+				layer.alert('有效时间不超过24小时', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if($.trim(carNum) == '')
+			{
+				layer.alert('请填写执法车号', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			var vNameReg = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+				if($.trim(carNum) != ''){
+					if (!vNameReg.test($.trim(carNum))) {
+						layer.alert('请填写正确的车牌号码', {
+							skin: 'layui-layer-molv' //样式类名
+							,closeBtn: 0
+						} )
+						return false;
+					}
+				}
+			var index = layer.load(0, {
+				shade: [0.5,'#fff'] //0.1透明度的白色背景
+			});
+			$.post("{:U('Track/ajaxGetLinePoint')}",{startTime:startTime,endTime:endTime,carNum:carNum},function(json){
+				bm.clearOverlays();
+				layer.closeAll('loading');
+				//console.log(json);
+				if(json==0 || json==null)
+				{
+					layer.alert('没查到相关轨迹', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					layer.closeAll("loading");
+				}
+				else
+				{
+					var points = [];
+
+					var vname = '';
+					$.each(json,function(k,v){
+						/*var p1 =  new BMap.Point(v.LON/100000, v.LAT/100000);
+						points.push(p1);
+						vname = v.VNAME;*/
+						var p1 =  new BMap.Point(v.lon/100000,v.lat/100000);
+						points.push(p1);
+						if(k == 0){
+							 p_start = new BMap.Point(v.lon/100000,v.lat/100000);
+						}
+						if(k === json.length-1){
+							p_end = new BMap.Point(v.lon/100000,v.lat/100000);
+						}
+					})
+
+					setZoom(points);
+					//创建起点图标http://api0.map.bdimg.com/images/blank.gif
+					var startIcon = new BMap.Icon("__IMG__/qidian_hangye.png", new BMap.Size(26,34));
+					var marker2 = new BMap.Marker(p_start,{icon:startIcon});  // 创建标注
+					bm.addOverlay(marker2); 
+					var endIcon = new BMap.Icon("__IMG__/zhongdian_hangye.png", new BMap.Size(26,34));
+					var marker3 = new BMap.Marker(p_end,{icon:endIcon});  // 创建标注
+					bm.addOverlay(marker3); 
+					
+					var polyline = new BMap.Polyline(points, {strokeColor:"black", strokeWeight:5, strokeOpacity:0.5});   //创建折线
+					bm.addOverlay(polyline);   //增加折线
+
+					//change(points,vname)
+				}
+
+			},'json')
+		
+	})
+
+/********************/
+//根据原始数据计算中心坐标和缩放级别，并为地图设置中心坐标和缩放级别。  
+function setZoom(points){  
+    if(points.length>0){  
+        var maxLng = points[0].lng;  
+        var minLng = points[0].lng;  
+        var maxLat = points[0].lat;  
+        var minLat = points[0].lat;  
+        var res;  
+        for (var i = points.length - 1; i >= 0; i--) {  
+            res = points[i];  
+            if(res.lng > maxLng) maxLng =res.lng;  
+            if(res.lng < minLng) minLng =res.lng;  
+            if(res.lat > maxLat) maxLat =res.lat;  
+            if(res.lat < minLat) minLat =res.lat;  
+        };  
+        var cenLng =(parseFloat(maxLng)+parseFloat(minLng))/2;  
+        var cenLat = (parseFloat(maxLat)+parseFloat(minLat))/2;  
+        var zoom = getZoom(maxLng, minLng, maxLat, minLat);  
+        bm.centerAndZoom(new BMap.Point(cenLng,cenLat), zoom);    
+    }else{  
+        //没有坐标，显示全中国  
+        bm.centerAndZoom(new BMap.Point(103.388611,35.563611), 5);    
+    }   
+} 
+//根据经纬极值计算绽放级别。  
+function getZoom (maxLng, minLng, maxLat, minLat) {  
+    var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。  
+    var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A  
+    var pointB = new BMap.Point(minLng,minLat);  // 创建点坐标B  
+    var distance = bm.getDistance(pointA,pointB).toFixed(1);  //获取两点距离,保留小数点后两位  
+    for (var i = 0,zoomLen = zoom.length; i < zoomLen; i++) {  
+        if(zoom[i] - distance > 0){  
+            return 18-i+3;//之所以会多3，是因为地图范围常常是比例尺距离的10倍以上。所以级别会增加3。  
+        }  
+    };  
+} 
+/*******************/
+
+
+function change(points,vname){
+	//坐标转换的回调函数
+
+	translateCallback = function (data){
+		if(data.status === 0) {
+
+
+			for (var i = 0; i < data.points.length; i++) {
+
+				newPoints.push(data.points[i]);//将转换后的新坐标，添加到新的数组中。
+			}
+			ssi++;//标识符自增
+
+			if(ssi<tenLength){
+				//因为每次只能转10个点，判断数组中是否还存在多余的点，取代for循环，在回调中执行转换函数，保证前一次的坐标都添加到新数组中。
+				zhuanhuan();
+			}
+			if(newPoints.length===points.length){
+				//当转后和转前的坐标数组长度一致时，证明已经转完，进行画点操作
+				var polyline = new BMap.Polyline(newPoints, {strokeColor:"black", strokeWeight:5, strokeOpacity:0.5});
+				bm.addOverlay(polyline);
+				var driving = new BMap.DrivingRoute(bm, {renderOptions:{map: bm, autoViewport: true}});
+				driving.search(newPoints[0], newPoints[newPoints.length-1]);//waypoints表示途经点
+				var opts = {
+					position : newPoints[0],    // 指定文本标注所在的地理位置
+					offset   : new BMap.Size(15, -30)    //设置文本偏移量
+				}
+				var label = new BMap.Label(vname, opts);  // 创建文本标注对象
+				label.setStyle({
+					fontSize : "14px",
+					width:"80px",
+					height : "30px",
+
+					lineHeight : "30px",
+					textAlign:"center",
+					border:"1px #cccccc solid",
+					fontFamily:"微软雅黑"
+				});
+				bm.addOverlay(label);
+			}
+		}
+	}
+
+
+	var pointsLength=points.length;//转换前点集的长度
+	var tenLength=parseInt(pointsLength/10);//判断长度是10的几倍
+	var tenMod=pointsLength%10;//对10取余数，如果大于零证明存在不是10的整数倍
+	if (tenMod>0){
+		tenLength=tenLength+1;
+	}
+	var ssi=0;//标识符，与tenLength进行比较判断是否调用zhuanhuan()方法
+
+	//转坐标的函数
+	function zhuanhuan(){
+		if(pointsLength==0){
+		//如果数组的长度是0，直接返回，即转换数组是空的。
+			return;
+		}
+		var convertor = new BMap.Convertor();
+		var start=parseInt(10*ssi);
+		var end=parseInt(start+10);
+
+		if(end>=pointsLength){
+		//如果结束标识长度，大于整个数组长度时，将结束的长度赋值为数组的长度+1，保证每个值都能被去到。
+			end=parseInt(pointsLength+1);
+		}
+
+		var arrys=points.slice(start, end);
+		//取出原数组中即将被转化的点
+		convertor.translate(arrys, 1, 5, translateCallback);
+		//调用转换函数，并且调用translateCallback回调函数
+	}
+	setTimeout(zhuanhuan(), 1000);
+}
+
+
+</script>
+
+
+<script type="text/javascript">
+	$(function(){
+		/*********/
+		//$("#firstpane .menu_body:eq(0)").show();
+		$("#firstpane h3.menu_head").click(function(){
+			$(this).addClass("current").next("div.menu_body").slideToggle(300).siblings("div.menu_body").slideUp("slow");
+			$(this).siblings().removeClass("current");
+		});
+		
+		$("#secondpane .menu_body:eq(0)").show();
+		$("#secondpane h3.menu_head").mouseover(function(){
+			$(this).addClass("current").next("div.menu_body").slideDown(500).siblings("div.menu_body").slideUp("slow");
+			$(this).siblings().removeClass("current");
+		});
+		/*********/
+		var height = $(document).height();
+		$('.center .center_left').css('min-height',height-150);
+	})
+</script>
+

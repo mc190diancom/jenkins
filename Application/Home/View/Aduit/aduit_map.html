@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+		<meta name="layout" content="main">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>道路运输行业现场稽查系统</title>
+		<script type="text/javascript" src="__JS__/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=e8PNl3bInqrm8d3iOrsk6NKR"></script>
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="__JS__/chuan/easyui/themes/icon.css">
+		<script type="text/javascript" src="__JS__/chuan/easyui/jquery.easyui.min.js"></script>
+		<script src="__JS__/chuan/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<!--  -->
+		
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/aduit.css"/>
+		<script src="__JS__/layer/layer.js"></script>
+		<script type="text/javascript" src="__JS__/laydate.js"></script>
+		<link rel="stylesheet" type="text/css" href="__CSS__/query.css"/>
+		<script src="__JS__/chuan/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+		
+		
+	</head>
+	<body>
+		
+		<div class="center_right_botton">
+			<!--startprint6-->
+			<div id="allmap" class="map" style="width: 100%; margin-top: 0px" ></div>
+			<!--endprint6-->
+		
+		</div>
+			
+		<div class="return">
+			<input type="submit" onclick="preview(6)" name="" id="preview" class="submit" value="打印" /> 
+		</div>
+
+
+	</body>
+</html>
+
+<script type="text/javascript">
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+</script>
+
+<script type="text/javascript">
+    
+  (function($) {
+    $.extend({
+        myTime: {
+            /**
+             * 当前时间戳
+             * @return <int>        unix时间戳(秒)  
+             */
+            CurTime: function(){
+                return Date.parse(new Date())/1000;
+            },
+            /**              
+             * 日期 转换为 Unix时间戳
+             * @param <string> 2014-01-01 20:20:20  日期格式              
+             * @return <int>        unix时间戳(秒)              
+             */
+            DateToUnix: function(string) {
+                var f = string.split(' ', 2);
+                var d = (f[0] ? f[0] : '').split('-', 3);
+                var t = (f[1] ? f[1] : '').split(':', 3);
+                return (new Date(
+                        parseInt(d[0], 10) || null,
+                        (parseInt(d[1], 10) || 1) - 1,
+                        parseInt(d[2], 10) || null,
+                        parseInt(t[0], 10) || null,
+                        parseInt(t[1], 10) || null,
+                        parseInt(t[2], 10) || null
+                        )).getTime() / 1000;
+            },
+            /**              
+             * 时间戳转换日期              
+             * @param <int> unixTime    待时间戳(秒)              
+             * @param <bool> isFull    返回完整时间(Y-m-d 或者 Y-m-d H:i:s)              
+             * @param <int>  timeZone   时区              
+             */
+            UnixToDate: function(unixTime, isFull, timeZone) {
+                var timeZone = 8;
+                if (typeof (timeZone) == 'number')
+                {
+                    unixTime = parseInt(unixTime) + parseInt(timeZone) * 60 * 60;
+                }
+                var time = new Date(unixTime * 1000);
+                var ymdhis = "";
+                ymdhis += time.getUTCFullYear() + "-";
+                ymdhis += (time.getUTCMonth()+1) + "-";
+                ymdhis += time.getUTCDate();
+                if (isFull === true)
+                {
+                    ymdhis += " " + time.getUTCHours() + ":";
+                    ymdhis += time.getUTCMinutes() + ":";
+                    ymdhis += time.getUTCSeconds();
+                }
+                return ymdhis;
+            }
+        }
+    });
+})(jQuery);
+</script>
+<script type="text/javascript">
+	
+	function preview(oper){
+
+		$("div#allmap").printArea();
+	}
+</script>
+
+
+<script type="text/javascript">
+	var newPoints=[];
+	var bm = new BMap.Map("allmap");
+	bm.centerAndZoom(new BMap.Point(116.403875,39.915168), 13);
+	bm.enableScrollWheelZoom(true);
+
+		$("#search_btn",parent.document.body).click(function(){
+			//window.location.reload();
+			bm.clearOverlays();
+
+			//根据原始数据计算中心坐标和缩放级别，并为地图设置中心坐标和缩放级别。  
+			function setZoom(points){  
+			    if(points.length>0){  
+			        var maxLng = points[0].lng;  
+			        var minLng = points[0].lng;  
+			        var maxLat = points[0].lat;  
+			        var minLat = points[0].lat;  
+			        var res;  
+			        for (var i = points.length - 1; i >= 0; i--) {  
+			            res = points[i];  
+			            if(res.lng > maxLng) maxLng =res.lng;  
+			            if(res.lng < minLng) minLng =res.lng;  
+			            if(res.lat > maxLat) maxLat =res.lat;  
+			            if(res.lat < minLat) minLat =res.lat;  
+			        };  
+			        var cenLng =(parseFloat(maxLng)+parseFloat(minLng))/2;  
+			        var cenLat = (parseFloat(maxLat)+parseFloat(minLat))/2;  
+			        var zoom = getZoom(maxLng, minLng, maxLat, minLat);  
+			        bm.centerAndZoom(new BMap.Point(cenLng,cenLat), zoom);    
+			    }else{  
+			        //没有坐标，显示全中国  
+			        bm.centerAndZoom(new BMap.Point(103.388611,35.563611), 5);    
+			    }   
+			} 
+			//根据经纬极值计算绽放级别。  
+			function getZoom (maxLng, minLng, maxLat, minLat) {  
+			    var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。  
+			    var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A  
+			    var pointB = new BMap.Point(minLng,minLat);  // 创建点坐标B  
+			    var distance = bm.getDistance(pointA,pointB).toFixed(1);  //获取两点距离,保留小数点后两位  
+			    for (var i = 0,zoomLen = zoom.length; i < zoomLen; i++) {  
+			        if(zoom[i] - distance > 0){  
+			            return 18-i+3;//之所以会多3，是因为地图范围常常是比例尺距离的10倍以上。所以级别会增加3。  
+			        }  
+			    };  
+			} 
+
+			var startTime = $("input[name='startTime']",parent.document.body).val();
+			var endTime = $("input[name='endTime']",parent.document.body).val();
+			var carNum = $("#vName",parent.document.body).val();
+
+			if(startTime == ''|| endTime == ''){
+				layer.alert('开始时间和结束时间不能为空', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= endTime){
+				layer.alert('开始时间不能大于结束时间', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+			if(startTime >= (new Date()).Format("yyyy-MM-dd hh:mm:ss") || endTime > (new Date()).Format("yyyy-MM-dd hh:mm:ss")){
+					layer.alert('请填写有效时间', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if(($.myTime.DateToUnix(endTime)-$.myTime.DateToUnix(startTime))>60*60*24){
+				layer.alert('有效时间不超过24小时', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} );
+				return false; 
+			}
+			if($.trim(carNum) == '')
+			{
+				layer.alert('请填写车牌号', {
+					skin: 'layui-layer-molv' //样式类名
+					,closeBtn: 0
+				} );
+				return false; 
+			}
+
+	
+			var vNameReg = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+			if($.trim(carNum) != ''){
+				if (!vNameReg.test($.trim(carNum))) {
+					layer.alert('请填写正确的车牌号码', {
+						skin: 'layui-layer-molv' //样式类名
+						,closeBtn: 0
+					} )
+					return false;
+				}
+			}
+
+				var index = layer.load(0, {
+					shade: [0.5,'#fff'] //0.1透明度的白色背景
+				});;
+				$.post("{:U('Aduit/ajaxGetLinePoint')}",{startTime:startTime,endTime:endTime,carNum:carNum},function(json){
+					layer.closeAll('loading');
+					//console.log(json);
+					if(jQuery.isEmptyObject(json))
+					{
+						layer.alert('没有查到该车辆信息', {
+							skin: 'layui-layer-molv' //样式类名
+							,closeBtn: 0
+						} )
+					}
+					else
+					{	
+						
+						/*var points = [];
+						var points1 = [];
+						var data = [];*/
+						var points = [];
+						for (var i = 0; i < json.length-1; i++) {
+							//console.log(json[i]);
+							
+							var polyline = new BMap.Polyline([new BMap.Point(json[i].lon,json[i].lat),new BMap.Point(json[i+1].lon,json[i+1].lat)], {strokeColor:"blue", strokeWeight:5, strokeOpacity:0.5});   //创建折线#269548
+								bm.addOverlay(polyline);
+							/*if((json[i].VEHICLE_STATUS==0 && json[i+1].VEHICLE_STATUS==0)||(json[i].VEHICLE_STATUS==0 && json[i+1].VEHICLE_STATUS==1)){
+								var polyline = new BMap.Polyline([new BMap.Point(json[i].lon,json[i].lat),new BMap.Point(json[i+1].lon,json[i+1].lat)], {strokeColor:"#269548", strokeWeight:5, strokeOpacity:0.5});   //创建折线#269548
+								bm.addOverlay(polyline);
+							}else if((json[i].VEHICLE_STATUS==1 && json[i+1].VEHICLE_STATUS==1)||(json[i].VEHICLE_STATUS==1 && json[i+1].VEHICLE_STATUS==0)){
+								var polyline1 = new BMap.Polyline([new BMap.Point(json[i].lon,json[i].lat),new BMap.Point(json[i+1].lon,json[i+1].lat)], {strokeColor:"#C58DBE", strokeWeight:5, strokeOpacity:0.5});   //创建折线
+								bm.addOverlay(polyline1);
+							}*/
+							
+							
+						}
+
+						//console.log(json[0]);
+
+						$.each(json,function(k,v){
+							//console.log(k);
+							var p1 =  new BMap.Point(v.lon,v.lat);
+							points.push(p1);
+							var Icons = new BMap.Icon("__IMG__/direction_biaoshi_other.png", new BMap.Size(8,8));
+							var markers = new BMap.Marker(new BMap.Point(v.lon,v.lat),{icon:Icons});  // 创建标注
+							markers.setRotation(540-v.AZIMUTHS);
+							bm.addOverlay(markers);
+							if(k == 0){
+								 p_start = new BMap.Point(v.lon,v.lat);
+								 bm.centerAndZoom(new BMap.Point(v.lon,v.lat), 13);
+							}
+							if(k === json.length-1){
+								p_end = new BMap.Point(v.lon,v.lat);
+							}
+							
+						});
+						//轨迹居中自适应大小
+						setZoom(points);
+
+						//console.log(p_start);
+						//创建起点图标http://api0.map.bdimg.com/images/blank.gif
+						var startIcon = new BMap.Icon("__IMG__/qidian_hangye.png", new BMap.Size(26,34));
+						var marker2 = new BMap.Marker(p_start,{icon:startIcon});  // 创建标注
+						bm.addOverlay(marker2); 
+						var endIcon = new BMap.Icon("__IMG__/zhongdian_hangye.png", new BMap.Size(26,34));
+						var marker3 = new BMap.Marker(p_end,{icon:endIcon});  // 创建标注
+						bm.addOverlay(marker3); 
+						
+						/*var polyline = new BMap.Polyline(points, {strokeColor:"#269548", strokeWeight:5, strokeOpacity:0.5});   //创建折线
+						var polyline1 = new BMap.Polyline(points1, {strokeColor:"#C58DBE", strokeWeight:5, strokeOpacity:0.5});
+						bm.addOverlay(polyline);   //增加折线
+						bm.addOverlay(polyline1);*/
+						//change(points)
+					}
+
+				},'json')
+			
+		})
+
+</script>
+

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>道路运输行业现场稽查系统</title>
+		<link rel="stylesheet" type="text/css" href="__CSS__/index.css"/>
+		<link rel="stylesheet" type="text/css" href="__CSS__/search.css"/>
+		<script src="__JS__/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__JS__/jquery.min-8.3.js" type="text/javascript"></script>
+		<script src="__JS__/layer/layer.js"></script>
+	</head>
+	<body>
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：框架头部
+        -->
+		<include file="Public:head" />
+		<!--
+        	作者：985498384@qq.com
+        	时间：2016-05-09
+        	描述：中间部分
+        -->
+		<div class="center">
+			<div class="center_left">
+				<dl>
+					<a href="index.html"><dt id="user" class="dldt">用户管理</dt></a>
+					<a href="index_sim.html"><dt id="sim" class="dldt">SIM卡管理</dt></a>
+					<a href="index_pda.html"><dt id="fal" class="dldt  border">终端管理</dt></a>
+					<a href="user.html"><dt id="admin" class="dldt">角色管理</dt>	</a>
+				</dl>
+			</div>
+			<div class="center_right" style="width: 385px;">
+				<div class="title_1" style="top: 180px; font-size: 18px; width: 120px;">
+					修改PDA卡号
+				</div>
+				<form action="www.baidu.com" method="post">
+					
+					
+			     <input type="hidden" value="{$zfzh}" id="zfzh" />
+				<div class="search_from" style="margin-top: 10px; height: 220px; width: 370px;">
+					<dl>						
+						<dd style="width: 80%">
+							<div class="left">原始卡号</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="old_sim" value="" />
+							</div>
+							<div class="clear"></div>
+						
+						</dd>
+						<dd style="width: 80%">
+							<div class="left">新卡号</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="n_sim" value="" />
+							</div>
+							<div class="clear"></div>
+						</dd>
+						<dd style="width: 80%">
+							<div class="left">确认卡号</div>
+							<div class="right">
+								<input type="text" class="input" name="" id="sure" value="" />
+							</div>
+							<div class="clear"></div>
+						</dd>
+					</dl>				
+				</div>
+				<div class="submit" id="button">
+					<input type="button" name="" id="" value="确认" />
+				</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	$("#change").click(function(){
+		if($("#info").hasClass('show'))
+		{
+			$("#info").removeClass('show');
+			$(".change").html('<img src="__IMG__/top.png"/>')
+		}
+		else
+		{
+			$("#info").addClass('show');
+			$(".change").html('<img src="__IMG__/down.png"/>')
+		}
+	})
+	$(".head_top").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	$(".center").click(function(){
+		$("#info").addClass('show');
+		$(".change").html('<img src="__IMG__/down.png"/>')
+	})
+	
+	$("#user").click(function(){
+		$("#user").addClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#sim").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").addClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#fal").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").addClass('border');
+		$("#admin").removeClass('border');				
+	})
+	$("#admin").click(function(){
+		$("#user").removeClass('border');
+		$("#sim").removeClass('border');
+		$("#fal").removeClass('border');
+		$("#admin").addClass('border');				
+	})
+
+	$("#button").click(function(){
+		var old_sim = $("#old_sim").val();
+		var n_sim = $("#n_sim").val();
+		var sure = $("#sure").val();
+		var zfzh = $("#zfzh").val();
+		if(zfzh == '')
+		{
+			layer.alert('选择错误', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		if($.trim(old_sim) == ''){
+			layer.alert('请输入原始的SIM卡号', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		if($.trim(n_sim) == ''){
+			layer.alert('请输入新的SIM卡号', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		if(n_sim != sure){
+			layer.alert('两次新卡号不一样', {
+				skin: 'layui-layer-molv' //样式类名
+				,closeBtn: 0
+			} )
+			return false;
+		}
+		$.post("{:U('Admin/ajaxUpdatePda')}",{old_sim:old_sim,n_sim:n_sim,zfzh:zfzh},function(data){
+			  if(data.err==0)
+			  {
+				  layer.msg(data.errorMsg, {icon: 1});
+				  setTimeout('window.history.go(-1);',2000);
+			  }
+			else
+			  {
+				  layer.msg(data.errorMsg, {icon: 2});
+			  }
+		})
+	})
+</script>
